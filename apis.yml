@@ -4,8 +4,7 @@ url: >-
 apis:
   - aid: apiable:apiable
     name: Apiable
-    tags:
-      - API
+    tags: []
     humanURL: https://www.apiable.io/platform/api-portal
     properties:
       - url: https://www.apiable.io/platform/api-portal
@@ -15,11 +14,11 @@ apis:
       Product Managers, API Products, and Multiple API gateways.
 name: Apiable
 tags:
-  - Portal
   - Experience
-  - Security
-  - Platform
   - Monetization
+  - Platform
+  - Portal
+  - Security
 type: Index
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 access: 3rd-Party
