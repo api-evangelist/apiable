@@ -85,6 +85,18 @@ common:
         description: Integration with Kong API Gateway for portal-driven API access management.
       - name: Google Tag Manager
         description: Deploy analytics, tracking, and marketing tags into developer portals via Google Tag Manager.
+  - type: Integrations
+    url: https://www.apiable.io/partners/
+integrations:
+  - name: Apiable
+  - name: API Portal
+  - name: API Products
+  - name: API Monetization
+  - name: API Developer Experience
+  - name: Amazon Web Services
+  - name: AWS Well-Architected Partner
+  - name: Available in AWS Marketplace
+  - name: Playbook
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
