@@ -7,7 +7,7 @@ description: >-
   self-service onboarding, usage metrics, subscription lifecycle management,
   and integrates with API gateways including Amazon API Gateway and Kong.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - Amazon API Gateway
   - API Gateway
