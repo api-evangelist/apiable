@@ -45,6 +45,10 @@ apis:
       - type: Pricing
         url: https://www.apiable.io/pricing
 common:
+  - type: TrustCenter
+    url: security/apiable-trust-center.yml
+  - type: DomainSecurity
+    url: security/apiable-domain-security.yml
   - type: Website
     url: https://www.apiable.io/
   - type: Pricing
