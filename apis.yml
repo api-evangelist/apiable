@@ -34,7 +34,7 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/apiable/refs/heads/main/apis.yml
 created: '2025-01-08'
 modified: '2026-04-19'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
   - aid: apiable:api-portal-platform
     name: Apiable API Portal Platform
