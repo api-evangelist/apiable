@@ -1,0 +1,35 @@
+generated: '2026-09-02'
+method: searched
+source: openapi/apiable-platform-api-openapi.json
+docs: https://www.apiable.io/docs/api-reference/
+summary:
+  types: [oauth2]
+  oauth2_flows: [clientCredentials]
+  bearer_token: true
+  api_key: false
+  applied_to_every_operation: true
+schemes:
+  - name: oauth-cc
+    type: oauth2
+    description: 'OAuth 2.0: Client Credentials'
+    flows:
+      - flow: clientCredentials
+        tokenUrl: https://developer.apiable.io/api/oauth2/token
+        scopes: 0
+    x_receive_token_in: request-body
+    sources: [openapi/apiable-platform-api-openapi.json]
+model: >-
+  A client id and client secret are exchanged at the tenant's own token endpoint
+  (<portal-host>/api/oauth2/token) for a JWT access token, which is then sent as a Bearer token on
+  every Platform API request. The spec's servers[] names https://developer.apiable.io because that
+  is Apiable's own reference portal; each customer calls their own portal host. The Apiable
+  GitHub Action exposes the same credential pair as api_key/api_secret plus an api_url.
+scopes_ref: scopes/apiable-scopes.yml
+notes:
+  - Every one of the 66 published operations carries an explicit security requirement — there is no
+    unauthenticated operation, and every operation declares a 401 response.
+  - >-
+    Apiable does not provide an identity provider for portal end users; customers bring their own
+    over OpenID Connect (Entra ID, Google, Okta, Cognito, Auth0, Keycloak). That is the CONSUMER
+    auth surface of a customer's portal, not the Platform API's own auth.
+    Source https://www.apiable.io/security/

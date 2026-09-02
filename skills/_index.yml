@@ -1,0 +1,53 @@
+generated: '2026-09-02'
+method: generated
+source: >-
+  openapi/apiable-platform-api-openapi.json (every operationId verified present in the spec),
+  conventions/apiable-conventions.yml, errors/apiable-problem-types.yml,
+  asyncapi/apiable-webhooks.yml, https://www.apiable.io/docs/automation/
+note: >-
+  Three packaged Agent Skills covering the Apiable Platform API's marquee flows. Every operationId
+  referenced was grepped from the published spec; no operation is invented. Apiable publishes no
+  AGENTS.md or skill files of its own (checked 2026-09-02 across www.apiable.io and the 9 public
+  repositories in github.com/apiable), so these are generated, not harvested.
+skills:
+  - file: apiable-onboard-and-approve-a-subscription.md
+    name: Onboard and approve an Apiable subscription
+    api: openapi/apiable-platform-api-openapi.json
+    scope: apiable/platform
+    operations:
+      - findAllProducts
+      - findAllPlans
+      - findPlanById_1
+      - findAllTeams
+      - createSubscription
+      - approveSubscription
+      - rejectSubscription
+      - findSubscriptionById
+      - cancelAndRevokeSubscription
+  - file: apiable-sync-openapi-from-ci.md
+    name: Sync an OpenAPI spec into an Apiable portal from CI
+    api: openapi/apiable-platform-api-openapi.json
+    scope: apiable/cicd
+    operations:
+      - findAllPlans
+      - findDocumentationByPlanId
+      - findDocById
+      - patchDocById
+      - createDocByPlanIntegrationId_1
+      - patchDocByPlanId_1
+      - patchFullApiDocConfiguration
+      - uploadFile
+      - versions
+  - file: apiable-consume-platform-webhooks.md
+    name: Consume and verify Apiable platform webhooks
+    api: openapi/apiable-platform-api-openapi.json
+    scope: apiable/cicd | apiable/platform | apiable/admin
+    operations:
+      - registerWebhook
+      - findAllWebhooks
+      - getWebhookById
+      - updateWebhook
+      - testWebhookById
+      - getWebhookHistory
+      - unregisterWebhook
+      - findSubscriptionById

@@ -1,0 +1,48 @@
+generated: '2026-09-02'
+method: searched
+source: openapi/apiable-platform-api-openapi.json
+docs: https://www.apiable.io/docs/automation/webhooks/
+note: >-
+  Two scopes appear in the spec's per-operation security requirements; the clientCredentials flow
+  declares an EMPTY scopes map, so the spec alone does not enumerate them. The docs name a third,
+  apiable/admin, which no operation in the published spec requires. Apiable's own scope docs at
+  /docs/access-control/scopes/ describe scopes CUSTOMERS define for THEIR APIs (Resource Groups,
+  Active/Optional/Restricted plan states, Keycloak and Auth0 as issuers) — that is a product
+  feature, not the Platform API's own scope reference, and is recorded here only as context.
+schemes:
+  - name: oauth-cc
+    source: openapi/apiable-platform-api-openapi.json
+    description: 'OAuth 2.0: Client Credentials'
+    flows:
+      - flow: clientCredentials
+        tokenUrl: https://developer.apiable.io/api/oauth2/token
+        declared_scopes: 0
+        note: >-
+          The flow's scopes map is empty in the published spec; scopes are only discoverable from
+          each operation's security[] requirement.
+scopes:
+  - scope: apiable/platform
+    description: >-
+      Full Platform API management. Required by all 66 published operations — products, plans,
+      subscriptions, teams, users, companies, invitations, documentation, files and webhooks.
+    flows: [clientCredentials]
+    operations: 66
+    sources: [openapi/apiable-platform-api-openapi.json]
+  - scope: apiable/cicd
+    description: >-
+      CI/CD scope. Accepted as an alternative on the 35 documentation, webhook, custom-property,
+      file-upload and server-info operations — the set a pipeline needs to push an OpenAPI spec
+      into a portal documentation entry.
+    flows: [clientCredentials]
+    operations: 35
+    sources:
+      - openapi/apiable-platform-api-openapi.json
+      - https://www.apiable.io/docs/automation/ci-cd/
+  - scope: apiable/admin
+    description: >-
+      Named in the webhooks documentation as a third scope that authorizes webhook management.
+      Not referenced by any operation in the published OpenAPI.
+    flows: [clientCredentials]
+    operations: 0
+    sources: [https://www.apiable.io/docs/automation/webhooks/]
+    note: docs-only — absent from the published contract

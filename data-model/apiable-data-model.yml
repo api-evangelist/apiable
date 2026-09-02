@@ -1,0 +1,169 @@
+generated: '2026-09-02'
+method: derived
+source: openapi/apiable-platform-api-openapi.json
+note: Entity-relationship graph derived from $ref links and id-reference fields in the Apiable Platform
+  API v2 OpenAPI 3.1 document. 62 component schemas; the 12 tag groups in the spec are the resource groups
+  the API exposes. Apiable publishes no separate object reference page, so id prefixes and domains are
+  not recorded — the ids observed in the spec examples are 24-character hex (MongoDB ObjectId shape),
+  unprefixed.
+id_format:
+  shape: 24-character lowercase hex
+  prefixed: false
+  examples:
+  - 6268ec80a098ed05f047f278
+  - 66f6b0f0ea99a34963977e55
+  - 664f1c2a9b1e4a0012ab34cd
+core_entities:
+- name: Product
+  fields: 21
+  references: []
+- name: Plan
+  fields: 32
+  references: []
+- name: Subscription
+  fields: 21
+  references: []
+- name: Team
+  fields: 10
+  references: []
+- name: User
+  fields: 12
+  references: []
+- name: Company
+  fields: 6
+  references: []
+- name: Invitation
+  fields: 11
+  references: []
+- name: WebhookConf
+  fields: 6
+  references: []
+- name: Api
+  fields: 7
+  references: []
+- name: Auth
+  fields: 3
+  references: []
+- name: Monetization
+  fields: 7
+  references: []
+- name: CustomProperty
+  fields: 7
+  references: []
+- name: DocumentationVersion
+  fields: 16
+  references: []
+entity_count: 62
+relationships:
+- from: Product
+  to: Plan
+  via: (glossary) a product groups plans
+  kind: has_many
+  basis: info.description glossary
+- from: Plan
+  to: Api
+  via: apis
+  kind: has_many
+  basis: embedded array of Api
+- from: Plan
+  to: Product
+  via: product
+  kind: belongs_to
+  basis: embedded object
+- from: Plan
+  to: Plan
+  via: ancestorPlanId
+  kind: belongs_to
+  basis: id-reference field (plan versioning lineage)
+- from: Subscription
+  to: Plan
+  via: plan
+  kind: belongs_to
+  basis: embedded object
+- from: Subscription
+  to: Team
+  via: team
+  kind: belongs_to
+  basis: embedded object
+- from: Subscription
+  to: User
+  via: owner
+  kind: belongs_to
+  basis: embedded object (billing responsible)
+- from: Subscription
+  to: Auth
+  via: auth
+  kind: has_one
+  basis: embedded object
+- from: Subscription
+  to: CustomProperty
+  via: customProperties
+  kind: has_many
+  basis: embedded array
+- from: Team
+  to: User
+  via: users
+  kind: has_many
+  basis: embedded array
+- from: Team
+  to: Company
+  via: company
+  kind: belongs_to
+  basis: embedded object
+- from: Invitation
+  to: Team
+  via: team
+  kind: belongs_to
+  basis: embedded object
+- from: Invitation
+  to: User
+  via: invitor
+  kind: belongs_to
+  basis: embedded object
+- from: Plan
+  to: DocumentationVersion
+  via: documentations
+  kind: has_many
+  basis: embedded array
+- from: Plan
+  to: Monetization
+  via: monetization
+  kind: has_one
+  basis: embedded object
+- from: Plan
+  to: RateLimit
+  via: rateLimit
+  kind: has_one
+  basis: embedded object
+glossary:
+  Product: A high-level abstraction of an API product; groups plans together.
+  Plan: A subscription plan attached to a product; can carry multiple APIs, free or paid.
+  Subscription: A subscription to a plan, owned by a team with one user as primary owner and billing responsible.
+  Team: A group of users that work together; may belong to a company.
+  Company: A group of teams. Companies carry no roles or permissions and do not share subscriptions between
+    their teams.
+  User: A platform user; may belong to several teams with different roles in each.
+  Invitation: An invitation to join a team; can be sent to an unregistered address.
+  WebhookConf: 'An outbound webhook registration: url, subscribed events, signing secret, headers.'
+glossary_source: openapi/apiable-platform-api-openapi.json (info.description "Glossary of Terms")
+schema_style: fully inlined — the spec uses no $ref between component schemas, so relationships are read
+  from embedded object/array shapes and id-reference field names
+id_reference_fields:
+- ancestorPlanId
+- approvalGroupIdRef
+- integrationId
+- providerId
+- stripeSubscriptionId
+resource_groups:
+- Companies
+- Custom Properties
+- Docs
+- Files
+- Invitations
+- Plans
+- Products
+- Serverinfo
+- Subscriptions
+- Teams
+- Users
+- Webhooks

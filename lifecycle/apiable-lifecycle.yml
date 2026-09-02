@@ -1,0 +1,52 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://www.apiable.io/docs/api-reference/; https://status.apiable.io/;
+  https://www.apiable.io/terms/support-policy/; openapi/apiable-platform-api-openapi.json
+versioning:
+  scheme: header + uri-major
+  current: v2
+  header: X-API-Version
+  enumerated_versions: ['2024-09-25']
+  default: latest when the header is omitted
+  docs: https://www.apiable.io/docs/api-reference/
+  note: >-
+    The Platform API reference is generated live from the OpenAPI 3.1 document Apiable publishes at
+    https://www.apiable.io/specs/apiable-platform-api.json, so the reference and the contract move
+    together. Only one dated version value is enumerated in the published contract.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecated_operations: []
+  note: >-
+    CHECKED, NOTHING TO RECORD. No operation, parameter or schema in the 66-operation spec carries
+    deprecated: true, and Apiable publishes no deprecation or sunset policy page. One request FIELD
+    is marked deprecated in prose: the webhook `authorization` field, superseded by `headers`
+    (https://www.apiable.io/docs/automation/webhooks/). That is a field-level note, not a policy,
+    so no Deprecation pointer is emitted.
+status_page: https://status.apiable.io/
+status_page_detail:
+  provider: Better Stack (statuspage.betteruptime.com)
+  components: ['apiable.io']
+  history: >-
+    Per-day operational history with named maintenance windows (e.g. "Infrastructure Upgrades",
+    "Week 27 Release"), read live on 2026-09-02 showing 100% uptime and all services online.
+sla:
+  url: https://www.apiable.io/terms/support-policy/
+  uptime_target: null
+  note: >-
+    A published Support Policy exists; no numeric uptime target is published on the public site.
+    Apiable's security page states enterprise arrangements are scoped in the sales conversation.
+changelog:
+  url: null
+  note: >-
+    CHECKED, NOTHING TO RECORD. Apiable publishes no dated changelog or release-notes page. The
+    sitemap (144 URLs, fetched 2026-09-02) contains no changelog, releases or what's-new path, and
+    the status page's maintenance entries are the only dated release signal on the estate. No
+    ChangeLog pointer is emitted.
+retry_and_delivery:
+  webhooks: >-
+    Failed webhook deliveries retry hourly up to 3 attempts, then stop. Delivery states are
+    PENDING, SUCCESS, ERROR, SKIPPED; 24 hours of delivery history is readable via
+    GET /api/webhooks/{id}/history.
+  source: https://www.apiable.io/docs/automation/webhooks/

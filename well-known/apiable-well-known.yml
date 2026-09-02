@@ -1,0 +1,174 @@
+generated: '2026-09-02'
+method: probed
+source: live GET of the named /.well-known/ path list on every Apiable host
+note: >-
+  No /.well-known/ document is served anywhere on the apiable.io estate. www.apiable.io returns a
+  real 404 for every path. developer.apiable.io and dashboard.apiable.io are single-page apps whose
+  edge answers 200 with an HTML shell (or 403 from CloudFront) for any /.well-known/ path, and
+  trust.apiable.io (a hosted Vanta Trust Center) answers 200 with HTML for every path INCLUDING the
+  negative control, so none of those 200s is a document. hit_count is 0 and no WellKnown or
+  SecurityTxt pointer is emitted.
+hit_count: 0
+path_echo_control: failed-on-trust.apiable.io
+soft_404_control:
+  - host: https://trust.apiable.io
+    path: /.well-known/apiable-negative-control-7f3ab91c.json
+    status: 200
+    content_type: text/html
+    verdict: catch-all — every /.well-known/ path returns the same HTML shell
+  - host: https://developer.apiable.io
+    path: /.well-known/apiable-negative-control-7f3ab91c.json
+    status: 403
+    content_type: application/xml
+    verdict: CloudFront denies unknown paths; the 200s on this host are SPA shells, not documents
+hosts:
+  - host: https://www.apiable.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/aauth-resource.json
+        status: 404
+      - path: /.well-known/ucp.json
+        status: 404
+      - path: /.well-known/acp.json
+        status: 404
+      - path: /.well-known/apiable-negative-control-7f3ab91c.json
+        status: 404
+  - host: https://developer.apiable.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/api-catalog
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/ai-plugin.json
+        status: 403
+      - path: /.well-known/agent-card.json
+        status: 403
+      - path: /.well-known/agent.json
+        status: 403
+      - path: /.well-known/aauth-resource.json
+        status: 403
+      - path: /.well-known/ucp.json
+        status: 403
+      - path: /.well-known/acp.json
+        status: 403
+      - path: /.well-known/apiable-negative-control-7f3ab91c.json
+        status: 403
+  - host: https://dashboard.apiable.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/api-catalog
+        status: 200
+        note: HTML SPA shell, not a document
+      - path: /.well-known/ai-plugin.json
+        status: 403
+      - path: /.well-known/agent-card.json
+        status: 403
+      - path: /.well-known/agent.json
+        status: 403
+      - path: /.well-known/aauth-resource.json
+        status: 403
+      - path: /.well-known/ucp.json
+        status: 403
+      - path: /.well-known/acp.json
+        status: 403
+      - path: /.well-known/apiable-negative-control-7f3ab91c.json
+        status: 403
+  - host: https://trust.apiable.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        note: HTML catch-all — negative control also 200; not a document
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/oauth-protected-resource
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/api-catalog
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/agent-card.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/agent.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/aauth-resource.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/ucp.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/acp.json
+        status: 200
+        note: HTML catch-all — not a document
+      - path: /.well-known/apiable-negative-control-7f3ab91c.json
+        status: 200
+        note: NEGATIVE CONTROL returned 200 — every hit on this host is discarded
+  - host: https://status.apiable.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 301
+      - path: /.well-known/openid-configuration
+        status: 301
+      - path: /.well-known/oauth-authorization-server
+        status: 301
+      - path: /.well-known/oauth-protected-resource
+        status: 301
+      - path: /.well-known/api-catalog
+        status: 301
+      - path: /.well-known/ai-plugin.json
+        status: 301
+      - path: /.well-known/agent-card.json
+        status: 301
+      - path: /.well-known/agent.json
+        status: 301
+      - path: /.well-known/aauth-resource.json
+        status: 301
+      - path: /.well-known/ucp.json
+        status: 301
+      - path: /.well-known/acp.json
+        status: 301
+      - path: /.well-known/apiable-negative-control-7f3ab91c.json
+        status: 301

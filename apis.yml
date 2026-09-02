@@ -44,9 +44,50 @@ tags:
 url: >-
   https://raw.githubusercontent.com/api-evangelist/apiable/refs/heads/main/apis.yml
 created: '2025-01-08'
-modified: '2026-04-19'
+modified: '2026-09-02'
 specificationVersion: '0.23'
 apis:
+  - aid: apiable:platform-api
+    name: Apiable Platform API
+    description: >-
+      The Apiable Platform API (v2) is the REST API Apiable publishes for managing an API program
+      programmatically: products, plans, subscriptions, teams, users, companies, invitations,
+      documentation entries, file uploads and outbound webhooks. It is an OpenAPI 3.1 contract of
+      66 operations across 12 resource groups, authenticated with OAuth 2.0 client credentials and
+      scoped with apiable/platform and apiable/cicd. Each customer calls it on their own portal
+      host; the published contract names Apiable's own reference portal in servers[].
+    humanURL: https://www.apiable.io/docs/api-reference/
+    baseURL: https://developer.apiable.io
+    tags:
+      - API Portal
+      - API Products
+      - Subscriptions
+      - Webhooks
+      - Monetization
+      - Platform API
+    properties:
+      - type: OpenAPI
+        url: openapi/apiable-platform-api-openapi.json
+      - type: APIReference
+        url: https://www.apiable.io/docs/api-reference/
+      - type: Documentation
+        url: https://www.apiable.io/docs/automation/
+      - type: Authentication
+        url: authentication/apiable-authentication.yml
+      - type: OAuthScopes
+        url: scopes/apiable-scopes.yml
+      - type: Webhooks
+        url: asyncapi/apiable-webhooks.yml
+      - type: ErrorCatalog
+        url: errors/apiable-problem-types.yml
+      - type: Conventions
+        url: conventions/apiable-conventions.yml
+      - type: DataModel
+        url: data-model/apiable-data-model.yml
+      - type: Overlay
+        url: overlays/apiable-platform-api-overlay.yaml
+      - type: AgentSkill
+        url: skills/_index.yml
   - aid: apiable:api-portal-platform
     name: Apiable API Portal Platform
     description: >-
@@ -55,7 +96,12 @@ apis:
       custom domains, automated API documentation with try-out functionality,
       developer onboarding, subscription management, usage dashboards, and
       role-based access control integrated with existing API gateways.
-    humanURL: https://www.apiable.io/platform/api-portal
+    humanURL: https://www.apiable.io/platform/api-portal/
+    x-note: >-
+      Product listing, not a callable endpoint. Apiable's portal platform is delivered as a
+      single-tenant portal on each customer's own host, so this entry has no single public base URL
+      and none is invented for it. Apiable's one callable, publicly specified API surface is
+      catalogued as apiable:platform-api above (baseURL https://developer.apiable.io).
     tags:
       - API Gateway
       - API Portal
@@ -64,10 +110,69 @@ apis:
       - Monetization
     properties:
       - type: Documentation
-        url: https://www.apiable.io/platform/api-portal
+        url: https://www.apiable.io/platform/api-portal/
       - type: Pricing
-        url: https://www.apiable.io/pricing
+        url: https://www.apiable.io/pricing/
 common:
+  - type: OpenAPI
+    name: Apiable Platform API v2
+    url: openapi/apiable-platform-api-openapi.json
+  - type: APIReference
+    url: https://www.apiable.io/docs/api-reference/
+  - type: Documentation
+    url: https://www.apiable.io/docs/
+  - type: DeveloperPortal
+    url: https://www.apiable.io/docs/
+  - type: GettingStarted
+    url: https://www.apiable.io/docs/get-started/onboarding/
+  - type: GitHubOrganization
+    url: https://github.com/apiable
+  - type: Support
+    url: https://www.apiable.io/terms/support-policy/
+  - type: SignUp
+    url: https://dashboard.apiable.io/
+  - type: TermsOfService
+    url: https://www.apiable.io/terms/terms-of-service/
+  - type: PrivacyPolicy
+    url: https://www.apiable.io/terms/privacy-policy/
+  - type: StatusPage
+    url: https://status.apiable.io/
+  - type: Security
+    url: https://www.apiable.io/security/
+  - type: Compliance
+    url: https://www.apiable.io/security/
+  - type: Lifecycle
+    url: lifecycle/apiable-lifecycle.yml
+  - type: Conventions
+    url: conventions/apiable-conventions.yml
+  - type: ErrorCatalog
+    url: errors/apiable-problem-types.yml
+  - type: Conformance
+    url: conformance/apiable-conformance.yml
+  - type: DataModel
+    url: data-model/apiable-data-model.yml
+  - type: Webhooks
+    url: asyncapi/apiable-webhooks.yml
+  - type: MCPServer
+    url: mcp/apiable-mcp.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: LLMsTxt
+    url: llms/apiable-llms.txt
+  - type: Overlay
+    url: overlays/apiable-platform-api-overlay.yaml
+  - type: Packages
+    url: packages/apiable-packages.yml
+  - type: RateLimits
+    url: rate-limits/apiable-rate-limits.yml
+  - type: Plans
+    url: plans/apiable-plans-pricing.yml
+  - type: AgenticAccess
+    url: agentic-access/apiable-agentic-access.yml
+  - type: OAuthScopes
+    url: scopes/apiable-scopes.yml
+  - type: Authentication
+    url: authentication/apiable-authentication.yml
   - type: TrustCenter
     url: security/apiable-trust-center.yml
   - type: DomainSecurity
@@ -75,9 +180,9 @@ common:
   - type: Website
     url: https://www.apiable.io/
   - type: Pricing
-    url: https://www.apiable.io/pricing
+    url: https://www.apiable.io/pricing/
   - type: Blog
-    url: https://www.apiable.io/resources
+    url: https://www.apiable.io/resources/
   - type: Features
     data:
       - name: API Portal Generation
@@ -127,3 +232,9 @@ integrations:
 maintainers:
   - FN: Kin Lane
     email: info@apievangelist.com
+
+x-enrichment:
+  date: '2026-09-02'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1

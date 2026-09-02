@@ -1,0 +1,1060 @@
+generated: '2026-09-02'
+method: generated
+source: openapi/apiable-platform-api-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 66
+  by_action_class:
+    connected: 30
+    acting: 36
+  by_consequence:
+    read: 30
+    write: 35
+    safety-critical: 1
+  human_in_the_loop_required: 1
+operations:
+- path: /api/webhooks/{id}
+  method: get
+  operationId: getWebhookById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/webhooks/{id}
+  method: put
+  operationId: updateWebhook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/webhooks/{id}
+  method: delete
+  operationId: unregisterWebhook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/users/{id}/roles
+  method: put
+  operationId: updateUserRoles
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/teams/{teamId}/users/{userId}
+  method: put
+  operationId: assignUserToTeam
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/teams/{teamId}/users/{userId}
+  method: delete
+  operationId: removeUserFromTeam
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{id}/custom-properties
+  method: put
+  operationId: updateCustomProperties
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/webhooks
+  method: get
+  operationId: findAllWebhooks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/webhooks
+  method: post
+  operationId: registerWebhook
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/users/{id}/reject
+  method: post
+  operationId: rejectUser
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/users/{id}/approve
+  method: post
+  operationId: approveUser
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/teams
+  method: get
+  operationId: findAllTeams
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/teams
+  method: post
+  operationId: createTeam
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions
+  method: get
+  operationId: findAllSubscriptions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions
+  method: post
+  operationId: createSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{id}/reject
+  method: post
+  operationId: rejectSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{id}/refresh-billing
+  method: post
+  operationId: refreshSubscriptionBillingStatus
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{id}/approve
+  method: post
+  operationId: approveSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/usage
+  method: post
+  operationId: meterSubscriptionUsage
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/docs
+  method: get
+  operationId: getDocsOfPlanById_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}/docs
+  method: post
+  operationId: createDocByPlanIntegrationId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/apis/{integrationId}/docs
+  method: get
+  operationId: getDocsOfApiByIntegrationIdAndPlanId_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}/apis/{integrationId}/docs
+  method: post
+  operationId: createDocByPlanIdAndApiIntegrationId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/apis/{integrationId}/docs
+  method: get
+  operationId: getDocsOfApiByIntegrationId_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/apis/{integrationId}/docs
+  method: post
+  operationId: createDocByApiIntegrationId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/invitations
+  method: get
+  operationId: findAllInvitations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/invitations
+  method: post
+  operationId: createInvitation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/files/upload
+  method: post
+  operationId: uploadFile
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/users/{id}
+  method: get
+  operationId: readUser
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/users/{id}
+  method: patch
+  operationId: updateUser
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/teams/{id}
+  method: get
+  operationId: findTeamById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/teams/{id}
+  method: patch
+  operationId: updateTeam
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{subscriptionId}/custom-properties/{customPropertyId}
+  method: get
+  operationId: getCustomPropertyForSubscription
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/{subscriptionId}/custom-properties/{customPropertyId}
+  method: patch
+  operationId: updateCustomPropertyForSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/{id}
+  method: get
+  operationId: findSubscriptionById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/{id}
+  method: delete
+  operationId: cancelAndRevokeSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/subscriptions/{id}
+  method: patch
+  operationId: updateSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/subscriptions/custom-properties/{customPropertyId}
+  method: patch
+  operationId: updateCustomPropertyForAllSubscription
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/docs/{docId}
+  method: get
+  operationId: getDocOfPlanById_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}/docs/{docId}
+  method: delete
+  operationId: deletePlanDocumentationByPlanId
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/docs/{docId}
+  method: patch
+  operationId: patchDocByPlanId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/apis/{integrationId}/docs/{docId}
+  method: get
+  operationId: getDocOfApiByIntegrationIdAndPlanId_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}/apis/{integrationId}/docs/{docId}
+  method: delete
+  operationId: deleteApiLevelDocumentationByPlanId
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/{id}/apis/{integrationId}/docs/{docId}
+  method: patch
+  operationId: patchDocByPlanIdAndApiIntegrationId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/apis/{integrationId}/docs/{docId}
+  method: get
+  operationId: getDocOfApiByIntegrationId_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/apis/{integrationId}/docs/{docId}
+  method: delete
+  operationId: deleteApiLevelDocumentation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/plans/apis/{integrationId}/docs/{docId}
+  method: patch
+  operationId: patchDocByApiIntegrationId_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/invitations/{id}
+  method: get
+  operationId: findInvitationById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/invitations/{id}
+  method: patch
+  operationId: updateInvitation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/docs/{docId}
+  method: get
+  operationId: findDocById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/docs/{docId}
+  method: patch
+  operationId: patchDocById
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/docs/full-api-doc
+  method: patch
+  operationId: patchFullApiDocConfiguration
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/companies/{id}
+  method: get
+  operationId: findCompanyById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/companies/{id}
+  method: patch
+  operationId: updateCompany
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - apiable/platform
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/webhooks/{id}/test
+  method: get
+  operationId: testWebhookById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/webhooks/{id}/history
+  method: get
+  operationId: getWebhookHistory
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/versions
+  method: get
+  operationId: versions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/users
+  method: get
+  operationId: findAllUsers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/{subscriptionId}/custom-properties
+  method: get
+  operationId: getCustomPropertiesForSubscription
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/products
+  method: get
+  operationId: findAllProducts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/products/{id}
+  method: get
+  operationId: findProductById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans
+  method: get
+  operationId: findAllPlans
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}
+  method: get
+  operationId: findPlanById_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/plans/{id}/docs/overview
+  method: get
+  operationId: findDocumentationByPlanId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/health
+  method: get
+  operationId: health
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/cicd
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/companies
+  method: get
+  operationId: findAllCompanies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - apiable/platform
+    token:
+      max-ttl: 3600
+    audit: none

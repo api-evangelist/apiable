@@ -1,0 +1,69 @@
+generated: '2026-09-02'
+method: searched
+source: >-
+  https://github.com/apiable (public org, 9 repos), https://registry.npmjs.org/react-curity,
+  https://www.apiable.io/docs/automation/ci-cd/
+note: >-
+  Apiable publishes NO first-party client SDK for the Apiable Platform API. The only first-party
+  distributions are a GitHub Action that pushes an OpenAPI spec into a portal documentation entry
+  from CI, and one npm library (react-curity) that wires a React app to a Curity authorization
+  server — an auth helper, not a Platform API client. Apiable's own answer to SDKs is
+  stubs-generator, an example Maven project that generates stubs from any OpenAPI spec rather than
+  a maintained, versioned client. No package exists on PyPI, Maven Central, NuGet, pkg.go.dev,
+  RubyGems, Packagist or crates.io under an apiable/io.apiable coordinate.
+packages:
+  - language: yaml
+    registry: github-action
+    name: apiable/apiable-github-actions
+    url: https://github.com/apiable/apiable-github-actions
+    install: "uses: apiable/apiable-github-actions@v2"
+    official: true
+    api_client: false
+    purpose: >-
+      Composite GitHub Action that authenticates to the Platform API with a client id/secret
+      carrying the apiable/cicd scope, downloads an OpenAPI spec from a URL, and updates a
+      portal documentation entry by docid.
+    version: null
+    published: null
+    note: >-
+      CHECKED, NOTHING TO RECORD. The published docs at
+      https://www.apiable.io/docs/automation/ci-cd/ instruct users to reference
+      apiable/apiable-github-actions@v2, but the public repository has no tags and no releases
+      (tags.atom is empty; /releases/tag/v2 returns 404) and raw refs v2 and v1 both 404. Only
+      the master branch resolves, so a consumer pinning @v2 as documented cannot resolve the ref
+      from the public repo. Probed 2026-09-02.
+  - language: javascript
+    registry: npm
+    name: react-curity
+    url: https://www.npmjs.com/package/react-curity
+    install: npm install react-curity
+    official: true
+    api_client: false
+    purpose: React helper for connecting an application to a Curity authorization server.
+    version: 2.2.12
+    published: '2022-12-13'
+    license: ISC
+    note: >-
+      First-party by maintainer (peter.porttinen@apiable.io) and by its declared repository
+      (github.com/apiable/react-curity), but that repository now returns 404 and the last
+      release predates the Apiable Platform API v2 spec by years. Not a Platform API client.
+      Version and date read from registry.npmjs.org/react-curity on 2026-09-02.
+  - language: java
+    registry: source-only
+    name: apiable/stubs-generator
+    url: https://github.com/apiable/stubs-generator
+    install: mvn clean install
+    official: true
+    api_client: false
+    purpose: >-
+      Example Maven project showing how to generate client stubs (SDKs) from an OpenAPI spec.
+      A recipe, not a published artifact.
+    version: null
+    published: null
+    note: >-
+      CHECKED, NOTHING TO RECORD. Source-only; no coordinate published to Maven Central under
+      io.apiable or any apiable group.
+sdk_count: 0
+sdk_note: >-
+  Zero official client libraries for the Apiable Platform API. No SDKs pointer is emitted, because
+  none of the three first-party distributions above is a client for the API this profile scores.

@@ -1,0 +1,143 @@
+generated: '2026-09-02'
+method: searched
+source: openapi/apiable-platform-api-openapi.json; https://www.apiable.io/docs/api-reference/; https://www.apiable.io/docs/automation/webhooks/
+api: Apiable Platform API v2
+authentication:
+  style: oauth2-client-credentials
+  header: 'Authorization: Bearer <jwt>'
+  token_endpoint: https://developer.apiable.io/api/oauth2/token
+  detail: authentication/apiable-authentication.yml
+versioning:
+  scheme: header
+  header: X-API-Version
+  values:
+  - '2024-09-25'
+  current: v2
+  default: latest
+  applied_to: all 66 operations (optional header parameter on every one)
+  docs: https://www.apiable.io/docs/api-reference/
+  note: The spec's own description states "The API is versioned using the X-API-Version header. The API
+    responds always with latest version, if not set otherwise." The only enumerated value in the published
+    contract is the date 2024-09-25, so the header is a dated pin over a v2 base path.
+pagination:
+  style: page-number
+  params:
+    page: zero-or-one-based page index (default page size 10)
+    size: page size, maximum 100
+    sort: sort expression
+    search: free-text filter on the collection
+  response_envelope: Page<Resource>Response (PageProductResponse, PagePlanResponse, ...)
+  applied_to: 7 collection operations
+  docs: https://www.apiable.io/docs/api-reference/
+idempotency:
+  supported: false
+  evidence: No Idempotency-Key header, parameter, or documented retry-safety contract appears anywhere
+    in the 66-operation spec or in the published docs. POST /api/subscriptions, POST /api/teams and POST
+    /api/webhooks are not documented as safe to retry. No Idempotency pointer is emitted.
+request_tracing:
+  supported: false
+  evidence: no request-id / correlation-id header documented in the spec or docs
+rate_limit_signaling:
+  supported: false
+  evidence: The spec description carries an empty "## Rate Limiting" section heading with no content,
+    and no operation documents a 429 response or any RateLimit-*/Retry-After header.
+  detail: rate-limits/apiable-rate-limits.yml
+errors:
+  envelope: Standard HTTP status codes; the body is a JSON object carrying an error message. The published
+    spec declares no error schema component — 4xx responses are declared by status code and description
+    only.
+  format: json (not RFC 9457 / application/problem+json)
+  statuses_declared:
+  - 400
+  - 401
+  - 404
+  detail: errors/apiable-problem-types.yml
+  observed_envelope:
+    fields:
+    - timestamp
+    - status
+    - error
+    - message
+    - path
+    example:
+      timestamp: '2026-09-02T19:23:16.235+00:00'
+      status: 405
+      error: Method Not Allowed
+      message: Method 'GET' is not supported.
+      path: /api/oauth2/token
+    observed_from: GET https://developer.apiable.io/api/oauth2/token — 405, probed 2026-09-02
+    note: undeclared in the spec; observed live
+media_types:
+  request: application/json
+  response: application/json
+  note: the only content type in the entire spec is application/json (182 declarations)
+field_expansion:
+  supported: partial
+  detail: A `resolve` query parameter appears on 2 operations; there is no general expand/sparse-fieldset
+    convention.
+metadata:
+  supported: true
+  detail: Subscriptions carry customer-defined Custom Properties, read and written through a dedicated
+    Custom Properties resource group (5 operations).
+events:
+  webhooks: asyncapi/apiable-webhooks.yml
+  signing: Standard Webhooks (HMAC-SHA256 over {webhook-id}.{webhook-timestamp}.{raw-body})
+reversibility:
+  grade: documented
+  applies: true
+  note: Apiable publishes real reversal paths for its write surface, and one of them takes an explicit
+    effective-at timestamp — but the docs state no WINDOW inside which a reversal is still possible for
+    any of them, so this grades `documented`, not `verified`. No window is asserted here that Apiable
+    does not publish.
+  operations:
+  - action: create a subscription
+    forward: createSubscription
+    reversal: cancelAndRevokeSubscription
+    window: null
+    detail: DELETE /api/subscriptions/{id} takes a `cancelAt` body field, a Unix-seconds UTC timestamp
+      for when the cancellation takes effect. It cancels in the billing system and revokes API access.
+      The caller chooses when it lands; Apiable publishes no deadline after which the subscription can
+      no longer be cancelled, and no un-cancel operation.
+    docs: https://www.apiable.io/docs/api-reference/
+  - action: approve a pending subscription
+    forward: approveSubscription
+    reversal: rejectSubscription
+    window: null
+    detail: approve and reject are the two terminal moves on a pending subscription request
+  - action: approve a pending user
+    forward: approveUser
+    reversal: rejectUser
+    window: null
+  - action: register a webhook
+    forward: registerWebhook
+    reversal: unregisterWebhook
+    window: null
+    detail: DELETE /api/webhooks/{id}. Deliveries already dispatched are not recalled; a webhook's last
+      24 hours of delivery attempts stay readable via getWebhookHistory.
+  - action: assign a user to a team
+    forward: assignUserToTeam
+    reversal: removeUserFromTeam
+    window: null
+  - action: attach documentation to a plan or API
+    forward: createDocByPlanIntegrationId_1 / createDocByApiIntegrationId_1
+    reversal: deletePlanDocumentationByPlanId / deleteApiLevelDocumentation
+    window: null
+  irreversible:
+  - operationId: meterSubscriptionUsage
+    note: POST /api/subscriptions/usage records billable usage. No reversal, void or correction operation
+      is published; the docs describe an `action` of increment or set, so a wrong increment can only be
+      compensated by a subsequent `set`, not withdrawn.
+  - operationId: uploadFile
+    note: no delete operation for an uploaded file is published
+dry_run_mode:
+  supported: partial
+  detail: GET /api/webhooks/{id}/test (testWebhookById) sends a signed TEST_EVENT delivery and returns
+    the status and body Apiable received, which is a genuine rehearsal for the webhook surface. No dry-run/preview
+    exists for subscription, billing, plan or user writes.
+cross_links:
+  authentication: authentication/apiable-authentication.yml
+  scopes: scopes/apiable-scopes.yml
+  errors: errors/apiable-problem-types.yml
+  lifecycle: lifecycle/apiable-lifecycle.yml
+  rate_limits: rate-limits/apiable-rate-limits.yml
+  webhooks: asyncapi/apiable-webhooks.yml

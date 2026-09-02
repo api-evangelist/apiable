@@ -1,0 +1,93 @@
+generated: '2026-09-02'
+method: searched
+source: https://www.apiable.io/docs/automation/webhooks/
+spec_type: none
+asyncapi_published: false
+asyncapi_note: >-
+  Apiable publishes no AsyncAPI document. The event surface is documented as an outbound webhook
+  catalog only, captured verbatim below. Probed 2026-09-02: no /asyncapi.yaml or /asyncapi.json on
+  www.apiable.io, and no event-catalog page in the 144-URL sitemap.
+surface: webhooks
+transport: https-post
+managed_via:
+  api: openapi/apiable-platform-api-openapi.json
+  operations:
+    - registerWebhook        # POST   /api/webhooks
+    - findAllWebhooks        # GET    /api/webhooks
+    - getWebhookById         # GET    /api/webhooks/{id}
+    - updateWebhook          # PUT    /api/webhooks/{id}
+    - unregisterWebhook      # DELETE /api/webhooks/{id}
+    - testWebhookById        # GET    /api/webhooks/{id}/test
+    - getWebhookHistory      # GET    /api/webhooks/{id}/history
+  scopes: [apiable/cicd, apiable/platform, apiable/admin]
+configuration:
+  fields:
+    - name: url
+      required: true
+      description: the endpoint Apiable POSTs to
+    - name: events
+      required: true
+      description: the list of event types this webhook receives
+    - name: whsec
+      required: false
+      description: >-
+        signing secret, base64-encoded and prefixed whsec_, decoding to 24-64 bytes. Apiable
+        generates one if omitted.
+    - name: headers
+      required: false
+      description: extra HTTP headers sent with every delivery
+    - name: authorization
+      required: false
+      deprecated: true
+      description: a single Authorization header value; superseded by headers
+events:
+  count: 9
+  catalog:
+    - type: SUBSCRIPTION_CREATED
+      fires: a developer creates a subscription to a plan
+    - type: SUBSCRIPTION_CANCELLED
+      fires: a subscription is cancelled
+    - type: SUBSCRIPTION_CHANGED
+      fires: a subscription changes
+    - type: SUBSCRIPTION_AUTH_CHANGED
+      fires: a subscription's authentication or credentials change
+    - type: INVOICE_ATTENTION_REQUIRED
+      fires: an invoice needs attention
+    - type: SCOPE_GRANT_REQUESTED
+      fires: a consumer requests a scope grant
+    - type: SCOPE_GRANT_APPROVED
+      fires: a scope grant request is approved
+    - type: SCOPE_GRANT_DECLINED
+      fires: a scope grant request is declined
+    - type: SCOPE_GRANT_REVOKED
+      fires: a scope grant is revoked
+  test_event: TEST_EVENT
+  note: >-
+    The published OpenAPI's WebhookConf schema enumerates only five of these nine event types
+    (SUBSCRIPTION_CREATED, SUBSCRIPTION_CANCELLED, SUBSCRIPTION_AUTH_CHANGED, SUBSCRIPTION_CHANGED,
+    INVOICE_ATTENTION_REQUIRED). The four SCOPE_GRANT_* types are documented but absent from the
+    contract's enum — a real divergence between the docs and the spec, recorded, not reconciled.
+payload:
+  media_type: application/json
+  shape: Standard Webhooks
+  fields: [id, type, timestamp, data, source]
+  example_source: https://www.apiable.io/docs/automation/webhooks/
+security:
+  scheme: Standard Webhooks
+  algorithm: HMAC-SHA256
+  headers:
+    - name: webhook-id
+      description: unique id for the message
+    - name: webhook-timestamp
+      description: send time, integer unix seconds
+    - name: webhook-signature
+      description: space-separated list of versioned signatures, each v1,<base64>
+  signed_content: '{webhook-id}.{webhook-timestamp}.{raw-body}'
+  key_derivation: base64-decode the secret after the whsec_ prefix
+  replay_tolerance: reject when webhook-timestamp is more than 5 minutes from now
+  standard: https://www.standardwebhooks.com/
+delivery:
+  success_codes: [200, 201, 202, 204]
+  retry: hourly, up to 3 attempts, then stop
+  statuses: [PENDING, SUCCESS, ERROR, SKIPPED]
+  history_window: 24 hours, via GET /api/webhooks/{id}/history

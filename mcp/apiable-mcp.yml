@@ -1,0 +1,88 @@
+generated: '2026-09-02'
+method: derived
+status: candidate
+source: openapi/apiable-platform-api-openapi.json
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+search_note: >-
+  Apiable ships no MCP server. Probed 2026-09-02: mcp.apiable.io does not resolve (NXDOMAIN); the
+  144-URL sitemap of www.apiable.io contains no MCP, agent or AI page; the 9 public repositories in
+  github.com/apiable contain none; and no package named for apiable exists in the npm registry
+  beyond react-curity. The tool list below is a DERIVED CANDIDATE from the published OpenAPI —
+  nobody serves it. No endpoint URL is invented.
+crosswalk_note: >-
+  No mcp/apiable-tool-crosswalk.yml is emitted. The crosswalk binds a REAL MCP (or GraphQL) surface
+  to its backing OpenAPI operations; with no second surface there is nothing to cross-walk, and a
+  crosswalk of a candidate against its own source would assert a divergence that does not exist.
+server:
+  name: apiable-platform
+  transport: null
+  url: null
+api: Apiable Platform API v2
+auth_model:
+  scheme: oauth2 client credentials
+  token_endpoint: <portal-host>/api/oauth2/token
+  scopes: [apiable/platform, apiable/cicd]
+  note: >-
+    Every candidate tool below would require a bearer token; the API has no unauthenticated
+    operation.
+candidate_tools:
+  - name: list_products
+    description: Read the API products in the catalog
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllProducts
+  - name: get_product
+    description: Read one API product by id
+    source_operation: openapi/apiable-platform-api-openapi.json#findProductById
+  - name: list_plans
+    description: Read the plans developers can subscribe to
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllPlans
+  - name: get_plan
+    description: Read one plan by id
+    source_operation: openapi/apiable-platform-api-openapi.json#findPlanById_1
+  - name: list_subscriptions
+    description: Retrieve all subscriptions
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllSubscriptions
+  - name: get_subscription
+    description: Get a subscription by id
+    source_operation: openapi/apiable-platform-api-openapi.json#findSubscriptionById
+  - name: create_subscription
+    description: Create a new subscription
+    source_operation: openapi/apiable-platform-api-openapi.json#createSubscription
+  - name: approve_subscription
+    description: Approve a pending subscription
+    source_operation: openapi/apiable-platform-api-openapi.json#approveSubscription
+  - name: reject_subscription
+    description: Reject a pending subscription
+    source_operation: openapi/apiable-platform-api-openapi.json#rejectSubscription
+  - name: cancel_subscription
+    description: Cancel and revoke a subscription at a given timestamp
+    source_operation: openapi/apiable-platform-api-openapi.json#cancelAndRevokeSubscription
+  - name: meter_subscription_usage
+    description: Report usage for subscription billing
+    source_operation: openapi/apiable-platform-api-openapi.json#meterSubscriptionUsage
+  - name: list_teams
+    description: Read consumer teams
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllTeams
+  - name: list_users
+    description: Read developer accounts
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllUsers
+  - name: approve_user
+    description: Approve a pending developer account
+    source_operation: openapi/apiable-platform-api-openapi.json#approveUser
+  - name: list_webhooks
+    description: Retrieve registered webhooks
+    source_operation: openapi/apiable-platform-api-openapi.json#findAllWebhooks
+  - name: register_webhook
+    description: Register an outbound webhook for platform events
+    source_operation: openapi/apiable-platform-api-openapi.json#registerWebhook
+  - name: get_webhook_history
+    description: Retrieve 24 hours of webhook delivery results
+    source_operation: openapi/apiable-platform-api-openapi.json#getWebhookHistory
+  - name: update_documentation
+    description: Patch a plan or API documentation entry (the CI/CD spec-push flow)
+    source_operation: openapi/apiable-platform-api-openapi.json#patchDocById

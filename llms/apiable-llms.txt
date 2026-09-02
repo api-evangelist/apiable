@@ -1,0 +1,71 @@
+# Apiable
+
+> Apiable is an API portal platform. It gives an API team a single-tenant, white-label developer
+> portal on a custom domain, bundles APIs into products and plans, onboards partners and developers
+> self-service, meters and monetizes usage through Stripe, and synchronizes all of it with the
+> customer's existing API gateway (Amazon API Gateway, Kong, Apigee, Azure API Management).
+> Apiable does not sit in the API request path — it reads gateway access logs retrospectively for
+> usage and billing. Apiable itself publishes one API: the Apiable Platform API v2, an OpenAPI 3.1
+> REST contract of 66 operations across 12 resource groups, authenticated with OAuth 2.0 client
+> credentials, plus a signed outbound webhook surface.
+
+## APIs
+
+- [Apiable Platform API v2](https://www.apiable.io/docs/api-reference/): 66 operations over
+  products, plans, subscriptions, teams, users, companies, invitations, documentation, files and
+  webhooks. OAuth 2.0 client credentials; every operation requires a token.
+
+## Specs
+
+- [OpenAPI 3.1 (published by Apiable)](https://www.apiable.io/specs/apiable-platform-api.json):
+  the document the live API reference is rendered from.
+
+## Docs
+
+- [Documentation home](https://www.apiable.io/docs/)
+- [Platform API reference](https://www.apiable.io/docs/api-reference/)
+- [Getting started / onboarding](https://www.apiable.io/docs/get-started/onboarding/)
+- [Automation overview](https://www.apiable.io/docs/automation/)
+- [Webhooks](https://www.apiable.io/docs/automation/webhooks/): 9 event types, Standard Webhooks
+  signing, hourly retry up to 3 attempts, 24-hour delivery history.
+- [CI/CD documentation sync](https://www.apiable.io/docs/automation/ci-cd/): push an OpenAPI spec
+  from a pipeline with the apiable/apiable-github-actions action.
+- [Report usage with the API](https://www.apiable.io/docs/monetization/report-usage-api/)
+- [Scope-based access control](https://www.apiable.io/docs/access-control/scopes/)
+- [Security & compliance](https://www.apiable.io/security/)
+
+## Conventions
+
+- Auth: OAuth 2.0 client credentials at `<portal-host>/api/oauth2/token`; Bearer JWT on every call.
+- Scopes: `apiable/platform` (all 66 operations), `apiable/cicd` (35 documentation, webhook,
+  custom-property, file and server-info operations), `apiable/admin` (documented for webhooks).
+- Versioning: `X-API-Version` header, optional on every operation; enumerated value `2024-09-25`;
+  the API answers with the latest version when the header is omitted.
+- Pagination: `page`, `size` (max 100), `sort`, `search`; responses wrapped in `Page<X>Response`.
+- Errors: standard HTTP status codes with a JSON body. NOT RFC 9457. Declared statuses are 400,
+  401 and 404 only; no 429 and no 5xx is declared.
+- Idempotency: none. No Idempotency-Key header or documented retry-safety contract exists.
+- Rate limits: none published for the Platform API. No RateLimit-*/Retry-After header, no 429.
+- Reversibility: cancel-and-revoke a subscription with an explicit `cancelAt` timestamp; approve
+  has a matching reject on subscriptions and users; webhooks and team memberships can be removed.
+  No window is published for any reversal, and metered usage has no reversal at all.
+
+## Operational
+
+- [Status page](https://status.apiable.io/)
+- [Trust center](https://trust.apiable.io/)
+- [Support policy](https://www.apiable.io/terms/support-policy/)
+- No changelog, no /.well-known/ document, no MCP server, no A2A agent card, no AsyncAPI, no CLI,
+  and no first-party client SDK for the Platform API are published as of 2026-09-02.
+
+## Commercial
+
+- [Pricing](https://www.apiable.io/pricing/): quote only. Licences per portal, platform fee driven
+  by the number of connected API gateways. No published tiers, prices or quotas.
+- [Terms of service](https://www.apiable.io/terms/terms-of-service/)
+- [Privacy policy](https://www.apiable.io/terms/privacy-policy/)
+- [Subprocessors](https://www.apiable.io/terms/subprocessors/)
+
+## Profile
+
+- [API Evangelist profile](https://apis.io/provider/apiable/) — independent third-party profile.

@@ -1,0 +1,230 @@
+generated: '2026-09-02'
+method: derived+probed
+source: openapi/apiable-platform-api-openapi.json
+format: http-status-json
+note: 'Derived from the 4xx responses declared in the Apiable Platform API v2 OpenAPI 3.1 document. The
+  API does NOT use RFC 9457 application/problem+json: every response body is application/json, the spec
+  declares no error schema component, and the info description says only that ''the response body will
+  contain a JSON object with an error message''. No 5xx response and no 429 is declared anywhere in the
+  66 operations, and Apiable publishes no separate error-code reference page, so there is nothing to enrich
+  these titles from. Statuses and per-status counts are exact.'
+envelope:
+  media_type: application/json
+  schema_component: null
+  rfc9457: false
+  observed_shape:
+    timestamp: ISO-8601 with offset
+    status: integer HTTP status
+    error: HTTP reason phrase
+    message: human-readable detail
+    path: the request path
+  observed_example:
+    timestamp: '2026-09-02T19:23:16.235+00:00'
+    status: 405
+    error: Method Not Allowed
+    message: Method 'GET' is not supported.
+    path: /api/oauth2/token
+  observed_from: GET https://developer.apiable.io/api/oauth2/token — 405, probed 2026-09-02
+  observed_note: The error envelope is NOT declared anywhere in the published OpenAPI. It was observed
+    on a live unauthenticated request and is the framework default shape (timestamp/status/error/message/path).
+    Recorded because a client has no other way to learn it; it is an observation, not a provider commitment.
+coverage:
+  operations: 66
+  operations_declaring_401: 66
+  statuses_declared:
+  - 400
+  - 401
+  - 404
+  statuses_absent:
+  - 403
+  - 409
+  - 422
+  - 429
+  - 500
+  - 502
+  - 503
+problems:
+- status: 400
+  title: Bad Request
+  count: 13
+  descriptions:
+  - description: 'Bad Request: Invalid update parameters or operation.'
+    operations: 5
+  - description: 'Bad Request: Invalid input data.'
+    operations: 2
+  - description: 'Bad Request: Invalid roles or operation.'
+    operations: 1
+  - description: 'Bad Request: Subscription cannot be rejected in its current state.'
+    operations: 1
+  - description: 'Bad Request: Subscription cannot be approved in its current state.'
+    operations: 1
+  - description: 'Bad Request: Invalid invitation data provided.'
+    operations: 1
+  - description: 'Bad Request: The file size exceeds the limit or is invalid.'
+    operations: 1
+  - description: 'Bad Request: Subscription cannot be canceled in its current state or invalid cancelAt
+      timestamp.'
+    operations: 1
+  source_operations:
+  - approveSubscription
+  - cancelAndRevokeSubscription
+  - createInvitation
+  - createSubscription
+  - createTeam
+  - rejectSubscription
+  - updateCompany
+  - updateCustomProperties
+  - updateSubscription
+  - updateTeam
+  - updateUser
+  - updateUserRoles
+  - uploadFile
+- status: 401
+  title: Unauthorized
+  count: 66
+  descriptions:
+  - description: 'Unauthorized for operation: getWebhookById'
+    operations: 1
+  - description: 'Unauthorized for operation: updateWebhook'
+    operations: 1
+  - description: 'Unauthorized for operation: unregisterWebhook'
+    operations: 1
+  - description: 'Unauthorized for operation: updateUserRoles'
+    operations: 1
+  - description: 'Unauthorized for operation: assignUserToTeam'
+    operations: 1
+  - description: 'Unauthorized for operation: removeUserFromTeam'
+    operations: 1
+  - description: 'Unauthorized for operation: updateCustomProperties'
+    operations: 1
+  - description: 'Unauthorized for operation: findAllWebhooks'
+    operations: 1
+  source_operations:
+  - approveSubscription
+  - approveUser
+  - assignUserToTeam
+  - cancelAndRevokeSubscription
+  - createDocByApiIntegrationId_1
+  - createDocByPlanIdAndApiIntegrationId_1
+  - createDocByPlanIntegrationId_1
+  - createInvitation
+  - createSubscription
+  - createTeam
+  - deleteApiLevelDocumentation
+  - deleteApiLevelDocumentationByPlanId
+  - deletePlanDocumentationByPlanId
+  - findAllCompanies
+  - findAllInvitations
+  - findAllPlans
+  - findAllProducts
+  - findAllSubscriptions
+  - findAllTeams
+  - findAllUsers
+  - findAllWebhooks
+  - findCompanyById
+  - findDocById
+  - findDocumentationByPlanId
+  - findInvitationById
+  - findPlanById_1
+  - findProductById
+  - findSubscriptionById
+  - findTeamById
+  - getCustomPropertiesForSubscription
+  - getCustomPropertyForSubscription
+  - getDocOfApiByIntegrationIdAndPlanId_1
+  - getDocOfApiByIntegrationId_1
+  - getDocOfPlanById_1
+  - getDocsOfApiByIntegrationIdAndPlanId_1
+  - getDocsOfApiByIntegrationId_1
+  - getDocsOfPlanById_1
+  - getWebhookById
+  - getWebhookHistory
+  - health
+  - meterSubscriptionUsage
+  - patchDocByApiIntegrationId_1
+  - patchDocById
+  - patchDocByPlanIdAndApiIntegrationId_1
+  - patchDocByPlanId_1
+  - patchFullApiDocConfiguration
+  - readUser
+  - refreshSubscriptionBillingStatus
+  - registerWebhook
+  - rejectSubscription
+  - rejectUser
+  - removeUserFromTeam
+  - testWebhookById
+  - unregisterWebhook
+  - updateCompany
+  - updateCustomProperties
+  - updateCustomPropertyForAllSubscription
+  - updateCustomPropertyForSubscription
+  - updateInvitation
+  - updateSubscription
+- status: 404
+  title: Not Found
+  count: 37
+  descriptions:
+  - description: 'Not Found: The team or user does not exist.'
+    operations: 2
+  - description: 'Not Found: The subscription to update does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested custom property does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested subscription does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested plan or API documentation does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested invitation does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested documentation does not exist.'
+    operations: 2
+  - description: 'Not Found: The requested webhook does not exist.'
+    operations: 1
+  source_operations:
+  - approveSubscription
+  - approveUser
+  - assignUserToTeam
+  - cancelAndRevokeSubscription
+  - createSubscription
+  - createTeam
+  - deleteApiLevelDocumentation
+  - deleteApiLevelDocumentationByPlanId
+  - deletePlanDocumentationByPlanId
+  - findCompanyById
+  - findDocById
+  - findDocumentationByPlanId
+  - findInvitationById
+  - findProductById
+  - findSubscriptionById
+  - findTeamById
+  - getCustomPropertiesForSubscription
+  - getCustomPropertyForSubscription
+  - getWebhookById
+  - getWebhookHistory
+  - meterSubscriptionUsage
+  - patchDocById
+  - patchFullApiDocConfiguration
+  - readUser
+  - refreshSubscriptionBillingStatus
+  - rejectSubscription
+  - rejectUser
+  - removeUserFromTeam
+  - testWebhookById
+  - unregisterWebhook
+  - updateCompany
+  - updateCustomProperties
+  - updateCustomPropertyForSubscription
+  - updateInvitation
+  - updateSubscription
+  - updateUserRoles
+  - updateWebhook
+probes:
+- url: https://developer.apiable.io/api/health
+  status: 401
+  note: gated; no body
+- url: https://developer.apiable.io/api/versions
+  status: 401
+  note: gated; no body
+- url: https://developer.apiable.io/api/oauth2/token
+  status: 405
+  note: GET on the POST-only token endpoint; returned the error envelope above

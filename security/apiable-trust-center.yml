@@ -1,13 +1,46 @@
-generated: '2026-07-11'
+generated: '2026-09-02'
 method: searched
 probe: true
 source: https://www.apiable.io/security/
-url: https://www.apiable.io/security/
+url: https://trust.apiable.io/
+trust_center:
+  url: https://trust.apiable.io/
+  platform: Vanta Trust Center
+  title: Apiable Trust Center
+  http_status: 200
+  probed: '2026-09-02'
+security_page: https://www.apiable.io/security/
 certifications:
-- ISO 27001
-- GDPR
+  - name: AWS Well-Architected Framework Review
+    status: achieved
+    year: 2025
+  - name: ISO 27001
+    status: in-progress
+    target_year: 2026
+  - name: GDPR
+    status: compliance-claimed
+    note: a regulatory regime, not a certification
+correction: >-
+  A prior round of this artifact listed "ISO 27001" as an achieved certification. Apiable's own
+  security page states "ISO 27001 in progress (2026)". Corrected 2026-09-02 to in-progress.
+posture:
+  hosting: AWS eu-central-1 (Frankfurt); additional regions available for enterprise customers
+  tenancy: dedicated single-tenant portal instance with its own database per customer
+  proxy: >-
+    Apiable is not in the API request path. Gateway access logs are read retrospectively
+    (CloudWatch Logs, Konnect analytics, Apigee analytics) for usage and billing.
+  encryption_in_transit: TLS 1.2+ enforced on all customer-facing endpoints
+  encryption_at_rest: AES-256 via AWS-managed services (RDS, S3, DynamoDB)
+  secrets: gateway credentials in AWS Secrets Manager behind a dedicated per-customer IAM role
+  audit_log: immutable admin audit log available to customer administrators
+  subprocessors: https://www.apiable.io/terms/subprocessors/
+  disclosure: >-
+    Apiable publishes an "Honest disclosure" section stating that adding an Apiable integration
+    grants Apiable admin access to the connected API gateway.
 evidence:
-- source: https://www.apiable.io/security/
-  keywords:
-  - iso 27001
-  - gdpr
+  - source: https://www.apiable.io/security/
+    http_status: 200
+    keywords: [iso 27001 in progress, gdpr, aws well-architected, tls 1.2, aes-256, single-tenant]
+  - source: https://trust.apiable.io/
+    http_status: 200
+    keywords: [apiable trust center, vanta]

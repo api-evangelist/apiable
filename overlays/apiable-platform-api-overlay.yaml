@@ -1,0 +1,71 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Apiable Platform API
+  version: 1.0.0
+extends: openapi/apiable-platform-api-openapi.json
+x-generated: '2026-09-02'
+x-method: generated
+x-source: >-
+  Derived from this repository's own enrichment artifacts. Applies API Evangelist annotations to the
+  harvested spec without mutating it. Every value below is sourced from an artifact in this repo or
+  from an Apiable-published page named in that artifact.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-profile: https://apis.io/provider/apiable/
+      x-apievangelist-harvested-from: https://www.apiable.io/specs/apiable-platform-api.json
+      x-apievangelist-harvested-on: '2026-09-02'
+      x-apievangelist-ownership-check: >-
+        servers[] developer.apiable.io, info.contact.url https://apiable.io,
+        info.contact.email support@apiable.io — all resolve to Apiable. Spec ownership confirmed.
+  - target: $.info
+    update:
+      x-conventions: conventions/apiable-conventions.yml
+      x-error-catalog: errors/apiable-problem-types.yml
+      x-lifecycle: lifecycle/apiable-lifecycle.yml
+      x-authentication: authentication/apiable-authentication.yml
+      x-scopes: scopes/apiable-scopes.yml
+      x-webhooks: asyncapi/apiable-webhooks.yml
+      x-data-model: data-model/apiable-data-model.yml
+      x-agentic-access: agentic-access/apiable-agentic-access.yml
+      x-agent-skills: skills/_index.yml
+  - target: $.info
+    update:
+      x-idempotency:
+        supported: false
+        note: no Idempotency-Key header or documented retry-safety contract in the published contract
+      x-rate-limits:
+        published: false
+        note: the info description carries an empty "## Rate Limiting" heading; no 429 is declared
+      x-reversibility:
+        grade: documented
+        note: reversal paths exist for subscriptions, approvals, webhooks and memberships; no window is published
+  - target: $.paths['/api/subscriptions/{id}'].delete
+    update:
+      x-reversal-of: createSubscription
+      x-reversal-window: null
+      x-reversal-note: >-
+        Takes a cancelAt Unix-seconds timestamp for when cancellation takes effect. Apiable
+        publishes no deadline after which a subscription can no longer be cancelled, and no
+        un-cancel operation.
+  - target: $.paths['/api/subscriptions/usage'].post
+    update:
+      x-irreversible: true
+      x-reversal-note: >-
+        No void, refund or correction operation is published for metered usage. A wrong increment
+        can only be compensated by a later `set`, not withdrawn.
+  - target: $.paths['/api/webhooks/{id}/test'].get
+    update:
+      x-dry-run: true
+      x-dry-run-note: >-
+        Sends a signed TEST_EVENT delivery and returns the status and body Apiable received —
+        a genuine rehearsal for the webhook surface.
+  - target: $.components.securitySchemes.oauth-cc.flows.clientCredentials
+    update:
+      x-observed-scopes:
+        - apiable/platform
+        - apiable/cicd
+      x-observed-scopes-note: >-
+        The published flow declares an EMPTY scopes map; these two are the scopes actually required
+        by the operations' security[] requirements. A third, apiable/admin, is named in the webhook
+        docs but required by no operation.

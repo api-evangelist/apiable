@@ -1,0 +1,31 @@
+generated: '2026-09-02'
+records: ABSENCE — Apiable publishes no vulnerability disclosure program. No VulnerabilityDisclosure
+  pointer is emitted from this file; it exists to record what was probed and what was not found.
+method: searched
+probe: true
+source: https://www.apiable.io/security/
+program: none
+policy: []
+contact:
+  - support@apiable.io
+disclosure_page: https://www.apiable.io/security/
+bug_bounty: null
+security_txt: null
+note: >-
+  Apiable publishes a substantial public Security & Compliance page addressed to security teams,
+  procurement reviewers and architects, and names an email address on it — but it is the general
+  support address, not a dedicated security contact, and there is no responsible-disclosure policy,
+  no bug bounty (HackerOne / Bugcrowd / Intigriti), and no /.well-known/security.txt anywhere on
+  the estate (probed 2026-09-02, see well-known/apiable-well-known.yml).
+probes:
+  - url: https://www.apiable.io/.well-known/security.txt
+    status: 404
+  - url: https://developer.apiable.io/.well-known/security.txt
+    status: 403
+  - url: https://www.apiable.io/security/
+    status: 200
+    result: security posture page, no disclosure policy
+evidence:
+  - source: https://www.apiable.io/security/
+    kind: security-posture-page
+    contact: support@apiable.io
