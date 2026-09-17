@@ -47,12 +47,14 @@ specificationVersion: '0.23'
 apis:
 - aid: apiable:api-portal-platform
   name: Apiable API Portal Platform
-  description: Apiable provides a self-service API portal platform for API product managers and developers.
-    It offers single-tenant dedicated portals with custom domains, automated API documentation with try-out
-    functionality, developer onboarding, subscription management, usage dashboards, and role-based access
-    control integrated with existing API gateways.
+  description: >-
+    Apiable provides a self-service API portal platform for API product managers and developers. It offers
+    single-tenant dedicated portals with custom domains, automated API documentation with try-out functionality,
+    developer onboarding, subscription management, usage dashboards, and role-based access control integrated
+    with existing API gateways.
   humanURL: https://www.apiable.io/platform/api-portal/
-  x-note: Product listing, not a callable endpoint. Apiable's portal platform is delivered as a single-tenant
+  x-note: >-
+    Product listing, not a callable endpoint. Apiable's portal platform is delivered as a single-tenant
     portal on each customer's own host, so this entry has no single public base URL and none is invented
     for it. Apiable's one callable, publicly specified API surface is catalogued as apiable:platform-api
     above (baseURL https://developer.apiable.io).
@@ -69,10 +71,11 @@ apis:
     url: https://www.apiable.io/pricing/
 - aid: apiable:apiable-companies-api
   name: Apiable Companies API
-  description: Companies, similar to teams are a way to group users together. Companies are a way to manage
-    multiple teams and users together. An example being a company that has teams for different departments,
-    such as backend and frontend development teams.Multiple teams can be part of the same company, and
-    unlike teams, companies do not have roles and permissions, nor are subscriptions shared between different
+  description: >-
+    Companies, similar to teams are a way to group users together. Companies are a way to manage multiple
+    teams and users together. An example being a company that has teams for different departments, such
+    as backend and frontend development teams.Multiple teams can be part of the same company, and unlike
+    teams, companies do not have roles and permissions, nor are subscriptions shared between different
     teams under the same company.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
@@ -99,8 +102,8 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-custom-properties-api
   name: Apiable Custom Properties API
-  description: Custom properties are additional fields that can be used to store extra information about
-    the subscription.
+  description: >-
+    Custom properties are additional fields that can be used to store extra information about the subscription.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -126,11 +129,12 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-docs-api
   name: Apiable Docs API
-  description: Docs are a way to store documentation in the system. The documentation can be used to store
-    API and Plan level API documentations in the system.A documentation entry is always associated with
-    either plan directly, or with an API, which is associated with a plan.The only exception to this,
-    is the Full API Reference, which is a special case, and is not associated with any plan. But with
-    the portal itself.
+  description: >-
+    Docs are a way to store documentation in the system. The documentation can be used to store API and
+    Plan level API documentations in the system.A documentation entry is always associated with either
+    plan directly, or with an API, which is associated with a plan.The only exception to this, is the
+    Full API Reference, which is a special case, and is not associated with any plan. But with the portal
+    itself.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -156,7 +160,8 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-files-api
   name: Apiable Files API
-  description: Files are a way to store files in the system. All uploaded files are stored in an S3 bucket.
+  description: >-
+    Files are a way to store files in the system. All uploaded files are stored in an S3 bucket.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -182,9 +187,9 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-invitations-api
   name: Apiable Invitations API
-  description: Invitations are a way to invite new users to join the platform and team of the inviter.
-    Invitations are typically sent by team members to new users, and can be accepted or ignored by the
-    invitee.
+  description: >-
+    Invitations are a way to invite new users to join the platform and team of the inviter. Invitations
+    are typically sent by team members to new users, and can be accepted or ignored by the invitee.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -236,8 +241,9 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-products-api
   name: Apiable Products API
-  description: Products are a high-level abstraction of your API products, they are used to group plans
-    together and to provide a high level overview of the product.
+  description: >-
+    Products are a high-level abstraction of your API products, they are used to group plans together
+    and to provide a high level overview of the product.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -261,37 +267,12 @@ apis:
     url: conventions/apiable-conventions.yml
   - type: DataModel
     url: data-model/apiable-data-model.yml
-- aid: apiable:apiable-serverinfo-api
-  name: Apiable Serverinfo API
-  description: Serverinfo is a way to get information about the server.
-  humanURL: https://www.apiable.io/docs/api-reference/
-  baseURL: https://developer.apiable.io
-  tags:
-  - Serverinfo
-  properties:
-  - type: OpenAPI
-    url: openapi/apiable-serverinfo-api-openapi.yml
-  - type: APIReference
-    url: https://www.apiable.io/docs/api-reference/
-  - type: Documentation
-    url: https://www.apiable.io/docs/automation/
-  - type: Authentication
-    url: authentication/apiable-authentication.yml
-  - type: OAuthScopes
-    url: scopes/apiable-scopes.yml
-  - type: Webhooks
-    url: asyncapi/apiable-webhooks.yml
-  - type: ErrorCatalog
-    url: errors/apiable-problem-types.yml
-  - type: Conventions
-    url: conventions/apiable-conventions.yml
-  - type: DataModel
-    url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-subscriptions-api
   name: Apiable Subscriptions API
-  description: Operations related to managing subscriptions, including retrieval, update, approval, rejection,
-    and refreshing the status of connected monetization. For security reasons, API keys, secrets, and
-    other sensitive information included in the subscriptions are not returned in the response.
+  description: >-
+    Operations related to managing subscriptions, including retrieval, update, approval, rejection, and
+    refreshing the status of connected monetization. For security reasons, API keys, secrets, and other
+    sensitive information included in the subscriptions are not returned in the response.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -317,9 +298,10 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-teams-api
   name: Apiable Teams API
-  description: Teams are a way to group users together. Teams are used to manage team-based access to
-    subscriptions on the platform with internal roles and permissions. Teams typically consist of one
-    to a handful of users.
+  description: >-
+    Teams are a way to group users together. Teams are used to manage team-based access to subscriptions
+    on the platform with internal roles and permissions. Teams typically consist of one to a handful of
+    users.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -345,10 +327,11 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-users-api
   name: Apiable Users API
-  description: Users are the people who use the platform. Users can be invited to join the platform by
-    an admin or they can sign up themselves. Users can be assigned to teams and have roles and permissions
-    within those teams. Each user has the possibility to be part of one or more teams, each with their
-    separate roles, permissions and subscriptions.
+  description: >-
+    Users are the people who use the platform. Users can be invited to join the platform by an admin or
+    they can sign up themselves. Users can be assigned to teams and have roles and permissions within
+    those teams. Each user has the possibility to be part of one or more teams, each with their separate
+    roles, permissions and subscriptions.
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -374,23 +357,65 @@ apis:
     url: data-model/apiable-data-model.yml
 - aid: apiable:apiable-webhooks-api
   name: Apiable Webhooks API
-  description: "# How Webhooks Work\n\nWebhooks are a way for services to communicate with each other\
-    \ in real time. When an event occurs, the Webhook sends an HTTP POST request to the URL that you've\
-    \ configured. The Webhook itself is unaware of any specific authorization mechanisms like the Apiable\
-    \ Lambda authorizer, and the Webhook URL can be any endpoint capable of receiving HTTP POST requests.\n\
-    \nOptionally, you can include custom headers in the request. These headers will be appended automatically\
-    \ by the Webhook to the HTTP POST request, adding any additional information required for the endpoint.\n\
-    \n ## Testing a Webhook before posting\n\nYou can test a Webhook by sending a POST request to the\
-    \ Webhook URL manually. Here’s an example curl command that simulates the Webhook sending a POST request:\n\
-    \n```bash\ncurl -X POST https:/apiable.example.io/webhook \\\n -H \"Content-Type: application/json\"\
-    \ \\\n -H \"api-key: MY-API-KEY\" \\\n -H \"Custom-Header-1: value1\" \\\n -H \"Custom-Header-2: value2\"\
-    \ \\\n -d '{\n   \"id\": \"67040bcb1eb964694d999a68\",\n   \"events\": [\n     \"SUBSCRIPTION_CREATED\"\
-    \n   ],\n   \"whsec\": \"whsec_CoX***pc=\"\n }'\n```\n\n## Example Webhook Configuration\n\nIn the\
-    \ following example, a Webhook is configured to send an HTTP POST request to a URL upon the occurrence\
-    \ of a `SUBSCRIPTION_CREATED` event. The parameters \"whsec\" and \"headers\" are optional.\n\n```json\n\
-    {\n  \"id\": \"67040bcb1eb964694d999a68\",\n  \"events\": [\n    \"SUBSCRIPTION_CREATED\"\n  ],\n\
-    \  \"url\": \"https:/apiable.example.io/webhook\",\n  \"headers\": {\n    \"api-key\": \"MY-API-KEY\"\
-    ,\n    \"Custom-Header-1\": \"value1\",\n    \"Custom-Header-2\": \"value2\"\n  }\n}\n```"
+  description: >-
+    # How Webhooks Work
+
+
+    Webhooks are a way for services to communicate with each other in real time. When an event occurs,
+    the Webhook sends an HTTP POST request to the URL that you've configured. The Webhook itself is unaware
+    of any specific authorization mechanisms like the Apiable Lambda authorizer, and the Webhook URL can
+    be any endpoint capable of receiving HTTP POST requests.
+
+
+    Optionally, you can include custom headers in the request. These headers will be appended automatically
+    by the Webhook to the HTTP POST request, adding any additional information required for the endpoint.
+
+     ## Testing a Webhook before posting
+
+    You can test a Webhook by sending a POST request to the Webhook URL manually. Here’s an example curl
+    command that simulates the Webhook sending a POST request:
+
+
+    ```bash
+
+    curl -X POST https:/apiable.example.io/webhook \
+     -H "Content-Type: application/json" \
+     -H "api-key: MY-API-KEY" \
+     -H "Custom-Header-1: value1" \
+     -H "Custom-Header-2: value2" \
+     -d '{
+       "id": "67040bcb1eb964694d999a68",
+       "events": [
+         "SUBSCRIPTION_CREATED"
+       ],
+       "whsec": "whsec_CoX***pc="
+     }'
+    ```
+
+
+    ## Example Webhook Configuration
+
+
+    In the following example, a Webhook is configured to send an HTTP POST request to a URL upon the occurrence
+    of a `SUBSCRIPTION_CREATED` event. The parameters "whsec" and "headers" are optional.
+
+
+    ```json
+
+    {
+      "id": "67040bcb1eb964694d999a68",
+      "events": [
+        "SUBSCRIPTION_CREATED"
+      ],
+      "url": "https:/apiable.example.io/webhook",
+      "headers": {
+        "api-key": "MY-API-KEY",
+        "Custom-Header-1": "value1",
+        "Custom-Header-2": "value2"
+      }
+    }
+
+    ```
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
@@ -398,6 +423,32 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/apiable-webhooks-api-openapi.yml
+  - type: APIReference
+    url: https://www.apiable.io/docs/api-reference/
+  - type: Documentation
+    url: https://www.apiable.io/docs/automation/
+  - type: Authentication
+    url: authentication/apiable-authentication.yml
+  - type: OAuthScopes
+    url: scopes/apiable-scopes.yml
+  - type: Webhooks
+    url: asyncapi/apiable-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/apiable-problem-types.yml
+  - type: Conventions
+    url: conventions/apiable-conventions.yml
+  - type: DataModel
+    url: data-model/apiable-data-model.yml
+- aid: apiable:apiable-server-info-api
+  name: Apiable Server Info API
+  description: Serverinfo is a way to get information about the server.
+  humanURL: https://www.apiable.io/platform/api-portal/
+  baseURL: https://developer.apiable.io
+  tags:
+  - Server Info
+  properties:
+  - type: OpenAPI
+    url: openapi/apiable-server-info-api-openapi.yml
   - type: APIReference
     url: https://www.apiable.io/docs/api-reference/
   - type: Documentation
