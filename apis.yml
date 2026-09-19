@@ -165,6 +165,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -247,6 +249,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -276,6 +280,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -305,6 +311,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
@@ -335,6 +343,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -419,6 +429,8 @@ apis:
   humanURL: https://www.apiable.io/docs/api-reference/
   baseURL: https://developer.apiable.io
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
