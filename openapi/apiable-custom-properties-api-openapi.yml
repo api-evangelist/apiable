@@ -1,0 +1,433 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Custom Properties API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Custom Properties
+  description: Custom properties are additional fields that can be used to store extra information about the subscription.
+paths:
+  /api/subscriptions/{subscriptionId}/custom-properties/{customPropertyId}:
+    get:
+      tags:
+      - Custom Properties
+      summary: Get a specific custom property by id for the subscription
+      description: Retrieves and returns the specific custom property by id for a specific subscription.
+      operationId: getCustomPropertyForSubscription
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: customPropertyId
+        in: path
+        description: The id of the custom property.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the custom property for the subscription.'
+          content:
+            application/json:
+              schema:
+                description: Custom Property
+                discriminator:
+                  propertyName: type
+                properties:
+                  readOnly:
+                    type: boolean
+                    description: Whether the custom property is read only
+                  id:
+                    type: string
+                  type:
+                    type: string
+                    description: The type of the custom property
+                    enum:
+                    - STRING
+                    - NUMBER
+                    - BOOLEAN
+                    - TEXT
+                    - OPTIONS
+                    - MULTI_OPTIONS
+                  description:
+                    type: string
+                    description: The description of the custom property
+                  includeInSubscriptionWizard:
+                    type: boolean
+                    description: Whether the custom property is included in the subscription wizard
+                  required:
+                    type: boolean
+                    description: Whether the custom property is required
+                  display:
+                    type: string
+                    description: The display name of the custom property
+              examples:
+                Example Custom Property:
+                  description: Custom property object with all its details.
+                  value:
+                    display: new display
+                    type: STRING
+                    description: string
+                    readOnly: true
+                    required: true
+                    includeInSubscriptionWizard: true
+                    value: new value2
+        '401':
+          description: 'Unauthorized for operation: getCustomPropertyForSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested custom property does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the custom property with the given ID is not found.
+                  value: Custom Property not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+    patch:
+      tags:
+      - Custom Properties
+      summary: Update a specific custom property by id for the subscription
+      description: Updates a specific custom property by id for a specific subscription using a patch operation.
+      operationId: updateCustomPropertyForSubscription
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: customPropertyId
+        in: path
+        description: The id of the custom property.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateCustomPropertyForSubscription.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Subscription Patch Example:
+                description: Example of a patch operation to update the custom property for a subscription.
+                value:
+                - op: replace
+                  path: /name
+                  value: new name
+        required: true
+      responses:
+        '204':
+          description: 'No Content: Successfully updated the custom property for the subscription.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the custom property is successfully updated.
+                  value: Custom property updated successfully
+        '401':
+          description: 'Unauthorized for operation: updateCustomPropertyForSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested custom property does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the custom property with the given ID is not found.
+                  value: Custom Property not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/subscriptions/custom-properties/{customPropertyId}:
+    patch:
+      tags:
+      - Custom Properties
+      summary: Update a specific custom property by id for all subscriptions
+      description: Updates a specific custom property by id for all subscriptions that have the custom property using a patch operation.
+      operationId: updateCustomPropertyForAllSubscription
+      parameters:
+      - name: customPropertyId
+        in: path
+        description: The id of the custom property.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateCustomPropertyForAllSubscription.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Subscription Patch Example:
+                description: Example of a patch operation to update the custom property for all subscriptions.
+                value:
+                - op: replace
+                  path: /name
+                  value: new name
+        required: true
+      responses:
+        '204':
+          description: 'No Content: Successfully updated the custom property for all subscriptions.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the custom property is successfully updated for all subscriptions.
+                  value: Custom property updated successfully for all subscriptions
+        '401':
+          description: 'Unauthorized for operation: updateCustomPropertyForAllSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/subscriptions/{subscriptionId}/custom-properties:
+    get:
+      tags:
+      - Custom Properties
+      summary: Get the custom properties for the subscription
+      description: Retrieves and returns all custom properties for a specific subscription.
+      operationId: getCustomPropertiesForSubscription
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve custom properties for.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the custom properties for the subscription.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: Custom Property
+                  discriminator:
+                    propertyName: type
+                  properties:
+                    readOnly:
+                      type: boolean
+                      description: Whether the custom property is read only
+                    id:
+                      type: string
+                    type:
+                      type: string
+                      description: The type of the custom property
+                      enum:
+                      - STRING
+                      - NUMBER
+                      - BOOLEAN
+                      - TEXT
+                      - OPTIONS
+                      - MULTI_OPTIONS
+                    description:
+                      type: string
+                      description: The description of the custom property
+                    includeInSubscriptionWizard:
+                      type: boolean
+                      description: Whether the custom property is included in the subscription wizard
+                    required:
+                      type: boolean
+                      description: Whether the custom property is required
+                    display:
+                      type: string
+                      description: The display name of the custom property
+              examples:
+                Example Custom Properties:
+                  description: List of custom properties associated with the specified subscription.
+                  value:
+                  - id: 66f69ac4ccc00456987e3df8
+                    display: new display
+                    type: STRING
+                    description: string
+                    readOnly: true
+                    required: true
+                    includeInSubscriptionWizard: true
+                    value: new value2
+        '401':
+          description: 'Unauthorized for operation: getCustomPropertiesForSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested subscription does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription with the given ID is not found.
+                  value: Subscription not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

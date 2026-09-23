@@ -1,0 +1,486 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Docs API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Docs
+  description: Docs are a way to store documentation in the system. The documentation can be used to store API and Plan level API documentations in the system.A documentation entry is always associated with either plan directly, or with an API, which is associated with a plan.The only exception to this, is the Full API Reference, which is a special case, and is not associated with any plan. But with the portal itself.
+paths:
+  /api/docs/{docId}:
+    get:
+      tags:
+      - Docs
+      summary: Get the doc by id
+      description: Retrieves and returns the specific API documentation by id.
+      operationId: findDocById
+      parameters:
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f3c2be7903d41208214a7d
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the documentation.'
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              examples:
+                Example Documentation:
+                  description: Documentation object with all its details.
+                  value:
+                    id: 66f172d43ee464553f9fe898
+                    order: 0
+                    version: '1.0'
+                    status: []
+                    active: true
+                    visible: true
+                    retrievalType: GATEWAY
+                    url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazingDocumentation.json
+                    name: Jokes (Cognito) - prod-202481-v-1.0.json
+                    synced: '2024-09-23T13:58:22.665'
+        '401':
+          description: 'Unauthorized for operation: findDocById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested documentation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the documentation with the given ID is not found.
+                  value: Documentation not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+    patch:
+      tags:
+      - Docs
+      summary: Patch the doc by id
+      description: Updates the API documentation by applying the specified patch operations.
+      operationId: patchDocById
+      parameters:
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f3c2be7903d41208214a7d
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: patchDocById.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Patch Example:
+                description: Example of a patch operation to update the documentation name.
+                value:
+                - op: replace
+                  path: /name
+                  value: new doc name
+        required: true
+      responses:
+        '200':
+          description: 'OK: Successfully updated the documentation.'
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              examples:
+                Updated Documentation:
+                  description: Documentation object with updated details.
+                  value:
+                    id: 66f172d43ee464553f9fe898
+                    order: 0
+                    version: '1.0'
+                    status: []
+                    active: true
+                    visible: true
+                    retrievalType: GATEWAY
+                    url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazingDocumentation.json
+                    name: Jokes (Cognito) - prod-202481-v-1.0.json
+                    synced: '2024-09-23T13:58:22.665'
+        '401':
+          description: 'Unauthorized for operation: patchDocById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested documentation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the documentation with the given ID is not found.
+                  value: Documentation not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/docs/full-api-doc:
+    patch:
+      tags:
+      - Docs
+      summary: Update the Full API reference
+      description: Updates the Full API documentation configuration by applying the specified patch operations.
+      operationId: patchFullApiDocConfiguration
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: patchFullApiDocConfiguration.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for Full API Docs Configuration
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Supported patch paths for Full API Docs Configuration
+                    enum:
+                    - /url
+                    - /public
+                    - /name
+                  value:
+                    type: string
+            examples:
+              Full API Doc Patch Example:
+                description: Example of a patch operation to update the Full API documentation configuration.
+                value:
+                - op: replace
+                  path: /url
+                  value: https://example.apiable.io/full-api-ref.json
+        required: true
+      responses:
+        '200':
+          description: 'OK: Successfully updated the Full API documentation configuration.'
+          content:
+            application/json:
+              schema:
+                description: The full-api-doc configuration
+                properties:
+                  url:
+                    type: string
+                  public:
+                    type: boolean
+                  name:
+                    type: string
+                  published:
+                    type: boolean
+                  cascade:
+                    type: boolean
+                  customDescriptions:
+                    type: array
+                    items:
+                      description: The custom description reference configuration
+                      properties:
+                        operationId:
+                          type: string
+                        method:
+                          type: string
+                        path:
+                          type: string
+                        description:
+                          type: string
+                  validationRulesetUrl:
+                    type: string
+                  validationType:
+                    type: string
+                    enum:
+                    - SPECTRAL
+              examples:
+                Updated Full API Doc Configuration:
+                  description: Full API documentation configuration with updated details.
+                  value:
+                    url: https://apiable.s3.eu-central-1.amazonaws.com/public/hairygreenwombatrlhy7g/34a2b273-7d15-4ebb-a8bf-7873ded2c8ad
+                    public: true
+                    name: example.yaml
+        '401':
+          description: 'Unauthorized for operation: patchFullApiDocConfiguration'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested Full API documentation configuration does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the Full API documentation configuration with the given ID is not found.
+                  value: Full API documentation configuration not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

@@ -1,0 +1,125 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Serverinfo API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Server Info
+  description: Serverinfo is a way to get information about the server.
+paths:
+  /api/versions:
+    get:
+      tags:
+      - Server Info
+      summary: Get versions of the API
+      description: This endpoint returns the versions of the API that are available. The versions are defined in the PlatformApiConfiguration class.
+      operationId: versions
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: List of API versions
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: 'Unauthorized for operation: versions'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/health:
+    get:
+      tags:
+      - Server Info
+      summary: Get health of the server
+      description: This endpoint returns the health status of the server. If the server is running and healthy, it will return a status of OK.
+      operationId: health
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                description: Health of the server
+                example:
+                  status: OK
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - OK
+                title: Health
+        '401':
+          description: 'Unauthorized for operation: health'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

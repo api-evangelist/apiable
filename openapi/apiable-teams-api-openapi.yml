@@ -1,0 +1,910 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Teams API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Teams
+  description: Teams are a way to group users together. Teams are used to manage team-based access to subscriptions on the platform with internal roles and permissions. Teams typically consist of one to a handful of users.
+paths:
+  /api/teams/{teamId}/users/{userId}:
+    put:
+      tags:
+      - Teams
+      summary: Assign user into a team
+      description: Assign a user to a team. To update the team object, use the dedicated endpoint to patch the desired values. To assign roles to the user, use the users endpoint. /users/{userId}/roles
+      operationId: assignUserToTeam
+      parameters:
+      - name: teamId
+        in: path
+        description: ID of the team to be assigned the user to.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f279
+      - name: userId
+        in: path
+        description: ID of the user to be assigned into the team
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: Team object with the user assigned.
+          content:
+            application/json:
+              schema:
+                description: Team
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the team
+                  users:
+                    type: array
+                    description: List of users in the team
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  internal:
+                    type: boolean
+                    description: The internal status of the team
+                  company:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                  allowDomainJoining:
+                    type: boolean
+              examples:
+                Example team:
+                  description: Example output of a team object with the user assigned.
+                  value:
+                    id: 6268ec80a098ed05f047f279
+                    created: '2022-04-27T07:10:56.86'
+                    updated: '2023-03-09T16:28:30.056'
+                    name: Shire-Hobbits
+                    users:
+                    - id: 6268ec80a098ed05f047f278
+                    internal: true
+                    version: 5
+        '401':
+          description: 'Unauthorized for operation: assignUserToTeam'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The team or user does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the team or user to be assigned is not found.
+                  value: Team or User not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+    delete:
+      tags:
+      - Teams
+      summary: Remove user from team
+      description: Remove a user from a team. To update the team object, use the dedicated endpoint to patch the desired values. To remove roles from the user, use the users endpoint. /users/{userId}/roles
+      operationId: removeUserFromTeam
+      parameters:
+      - name: teamId
+        in: path
+        description: ID of the team to be remove the user from.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f279
+      - name: userId
+        in: path
+        description: ID of the user to be removed from the team
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: Team object with the user removed.
+          content:
+            application/json:
+              schema:
+                description: Team
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the team
+                  users:
+                    type: array
+                    description: List of users in the team
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  internal:
+                    type: boolean
+                    description: The internal status of the team
+                  company:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                  allowDomainJoining:
+                    type: boolean
+              examples:
+                Example team:
+                  description: Example output of a team object with the user removed.
+                  value:
+                    id: 6268ec80a098ed05f047f279
+                    created: '2022-04-27T07:10:56.86'
+                    updated: '2023-03-09T16:28:30.056'
+                    name: Shire-Hobbits
+                    users:
+                    - id: 6268ec80a098ed05f047f278
+                    internal: true
+                    version: 5
+        '401':
+          description: 'Unauthorized for operation: removeUserFromTeam'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The team or user does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the team or user to be removed is not found.
+                  value: Team or User not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/teams:
+    get:
+      tags:
+      - Teams
+      summary: Read Teams
+      description: List all teams on the platform that match the pagination and search criteria.
+      operationId: findAllTeams
+      parameters:
+      - name: page
+        in: query
+        description: The page number of the teams to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: The number of teams to be returned per page.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: The sorting criteria for the teams. The sorting criteria is a list of fields separated by commas.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name:DESC
+      - name: search
+        in: query
+        description: The search criteria for the teams.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name.like=engineering
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of teams.'
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated team results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Team
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        name:
+                          type: string
+                          description: The name of the team
+                        users:
+                          type: array
+                          description: List of users in the team
+                          items:
+                            description: Unique identifier to an object
+                            properties:
+                              id:
+                                type: string
+                        internal:
+                          type: boolean
+                          description: The internal status of the team
+                        company:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        domains:
+                          type: array
+                          items:
+                            type: string
+                          uniqueItems: true
+                        allowDomainJoining:
+                          type: boolean
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example list of teams:
+                  description: List of all teams that exist on the portal.
+                  value:
+                    content:
+                    - id: 6268ec80a098ed05f047f279
+                      created: '2022-04-27T07:10:56.86'
+                      updated: '2023-03-09T16:28:30.056'
+                      name: Shire-Hobbits
+                      users:
+                      - id: 6268ec80a098ed05f047f278
+                      internal: true
+                      version: 5
+                    - id: 62691aa099a7d17e2cac7664
+                      created: '2022-04-27T10:27:44.198'
+                      updated: '2024-09-18T15:18:42.505'
+                      name: Isengard-Orcs
+                      users:
+                      - id: 62691aa099a7d17e2cac7663
+                      internal: false
+                      version: 10
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: true
+                        sorted: false
+                        unsorted: true
+                      offset: 0
+                      unpaged: false
+                      paged: true
+                    last: true
+                    totalElements: 2
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: true
+                      sorted: false
+                      unsorted: true
+                    first: true
+                    numberOfElements: 2
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllTeams'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+    post:
+      tags:
+      - Teams
+      summary: Create a new team
+      description: Creates a new team programmatically with the specified name, users, company, and domain settings. The team can be configured for domain-based joining and linked to a company.
+      operationId: createTeam
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: createTeam.'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                users:
+                  type: array
+                  items:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                internal:
+                  type: boolean
+                company:
+                  description: Unique identifier to an object
+                  properties:
+                    id:
+                      type: string
+                domains:
+                  type: array
+                  items:
+                    type: string
+                  uniqueItems: true
+                domainJoinEnabled:
+                  type: boolean
+            examples:
+              Create team request:
+                description: Example request to create a new team with users and company association.
+                value:
+                  name: Engineering Team
+                  users:
+                  - 6268ec80a098ed05f047f278
+                  internal: false
+                  company: 62691aa099a7d17e2cac7665
+                  domains:
+                  - example.com
+                  domainJoinEnabled: true
+        required: true
+      responses:
+        '200':
+          description: 'OK: Team created successfully.'
+          content:
+            application/json:
+              schema:
+                description: Team
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the team
+                  users:
+                    type: array
+                    description: List of users in the team
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  internal:
+                    type: boolean
+                    description: The internal status of the team
+                  company:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                  allowDomainJoining:
+                    type: boolean
+              examples:
+                Example response:
+                  description: Created team with all details.
+                  value:
+                    id: 6268ec80a098ed05f047f279
+                    created: '2022-04-27T07:10:56.86'
+                    updated: '2023-03-09T16:28:30.056'
+                    name: Shire-Hobbits
+                    users:
+                    - id: 6268ec80a098ed05f047f278
+                    internal: true
+                    version: 5
+        '400':
+          description: 'Bad Request: Invalid input data.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Missing Required Field:
+                  description: Error when required field (name) is missing from request
+                  value:
+                    error: Bad Request
+                    message: Team name is required
+                Blank Field:
+                  description: Error when team name is provided but blank
+                  value:
+                    error: Bad Request
+                    message: Team name cannot be blank
+                Invalid Domain:
+                  description: Error when domain format is invalid
+                  value:
+                    error: Bad Request
+                    message: Invalid domain format
+        '401':
+          description: 'Unauthorized for operation: createTeam'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The company or user specified does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error when the company or user cannot be found
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/teams/{id}:
+    get:
+      tags:
+      - Teams
+      summary: Read Team
+      description: Retrieve a team by id. The team will be returned with all its details.
+      operationId: findTeamById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the team to be retrieved.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6409edb91c6c14300fce1a3c
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the team.'
+          content:
+            application/json:
+              schema:
+                description: Team
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the team
+                  users:
+                    type: array
+                    description: List of users in the team
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  internal:
+                    type: boolean
+                    description: The internal status of the team
+                  company:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                  allowDomainJoining:
+                    type: boolean
+              examples:
+                Example team:
+                  description: Team object with all its details.
+                  value:
+                    id: 6268ec80a098ed05f047f279
+                    created: '2022-04-27T07:10:56.86'
+                    updated: '2023-03-09T16:28:30.056'
+                    name: Shire-Hobbits
+                    users:
+                    - id: 6268ec80a098ed05f047f278
+                    internal: true
+                    version: 5
+        '401':
+          description: 'Unauthorized for operation: findTeamById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested team does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the team with the given ID is not found.
+                  value: Team not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+    patch:
+      tags:
+      - Teams
+      summary: Update Team
+      description: Update values of the platform team. The response of the operation will be the updated team. The updates are applied through patch logic, which means that only the fields that are included in the request will be updated. The rest of the fields will remain unchanged.
+      operationId: updateTeam
+      parameters:
+      - name: id
+        in: path
+        description: The id of the team to be updated.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6409edb91c6c14300fce1a3c
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateTeam.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for team
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Supported patch paths for Team
+                    enum:
+                    - /name
+                    - /internal
+                  value:
+                    type: string
+                    description: Value to be patched, can be a boolean or a string depending on the path
+            examples:
+              Example patch operations:
+                description: Patch operation to update the team.
+                value:
+                - op: replace
+                  path: /name
+                  value: Lothlorien-Elves
+        required: true
+      responses:
+        '200':
+          description: 'OK: Team updated successfully.'
+          content:
+            application/json:
+              schema:
+                description: Team
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the team
+                  users:
+                    type: array
+                    description: List of users in the team
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  internal:
+                    type: boolean
+                    description: The internal status of the team
+                  company:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  domains:
+                    type: array
+                    items:
+                      type: string
+                    uniqueItems: true
+                  allowDomainJoining:
+                    type: boolean
+              examples:
+                Example response:
+                  description: Updated team object.
+                  value:
+                    id: 6268ec80a098ed05f047f279
+                    created: '2022-04-27T07:10:56.86'
+                    updated: '2023-03-09T16:28:30.056'
+                    name: Shire-Hobbits
+                    users:
+                    - id: 6268ec80a098ed05f047f278
+                    internal: true
+                    version: 5
+        '400':
+          description: 'Bad Request: Invalid update parameters or operation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the patch operation is not allowed for the team.
+                  value: Bad Request
+        '401':
+          description: 'Unauthorized for operation: updateTeam'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

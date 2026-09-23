@@ -1,0 +1,730 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Products API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Products
+  description: Products are a high-level abstraction of your API products, they are used to group plans together and to provide a high level overview of the product.
+paths:
+  /api/products:
+    get:
+      tags:
+      - Products
+      summary: Read Products
+      description: List all products on the platform that match the pagination and search criteria.
+      operationId: findAllProducts
+      parameters:
+      - name: page
+        in: query
+        description: The page number of the products to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: The number of products to be returned per page.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: The sorting criteria for the products. The sorting criteria is a list of fields separated by commas.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name:DESC
+      - name: search
+        in: query
+        description: The search criteria for the products.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name.like=example
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of products.'
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated product results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Product
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        title:
+                          type: string
+                        visibility:
+                          type: string
+                          enum:
+                          - OPEN
+                          - HIDDEN
+                        audience:
+                          type: string
+                          enum:
+                          - PUBLIC
+                          - MANUAL
+                          - INTERNAL
+                        slug:
+                          type: string
+                          description: The url slug of the product
+                        active:
+                          type: boolean
+                        marketings:
+                          type: array
+                          description: List of marketing feature references for this product.
+                          items:
+                            description: Unique identifier to an object
+                            properties:
+                              id:
+                                type: string
+                        testimonials:
+                          type: array
+                          description: List of testimonials for this product.
+                          items:
+                            description: A testimonial for a product
+                            properties:
+                              author:
+                                type: string
+                              title:
+                                type: string
+                              content:
+                                type: string
+                              avatar:
+                                type: string
+                        description:
+                          type: string
+                        image:
+                          description: Image object containing URL, name, width, height and size
+                          properties:
+                            url:
+                              type: string
+                            name:
+                              type: string
+                            width:
+                              type: integer
+                              format: int32
+                            height:
+                              type: integer
+                              format: int32
+                            size:
+                              type: integer
+                              format: int32
+                        menuItems:
+                          description: Custom menu items for this product.
+                          properties:
+                            general:
+                              type: object
+                              additionalProperties:
+                                type: object
+                              properties:
+                                empty:
+                                  type: boolean
+                            authorized:
+                              type: object
+                              additionalProperties:
+                                type: object
+                              properties:
+                                empty:
+                                  type: boolean
+                            monetization:
+                              description: The monetization configuration interface
+                              discriminator:
+                                propertyName: type
+                              properties:
+                                invoiceAttentionRequiredNotificationEmails:
+                                  type: array
+                                  items:
+                                    type: string
+                                connected:
+                                  type: boolean
+                                type:
+                                  type: string
+                              required:
+                              - type
+                        groupRefs:
+                          type: array
+                          items:
+                            type: string
+                            description: Reference to an enterprise group that this product is associated with.
+                        productCategories:
+                          type: array
+                          description: List of product categories that this product has been associated with.
+                          items:
+                            description: Unique identifier to an object
+                            properties:
+                              id:
+                                type: string
+                        icon:
+                          description: The icon of the product
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - CUSTOM
+                              - SYSTEM
+                            value:
+                              type: string
+                        cardDisplay:
+                          type: string
+                          enum:
+                          - ICON
+                          - IMAGE
+                        markdocObjects:
+                          type: array
+                          items:
+                            description: A product markdoc object
+                            properties:
+                              name:
+                                type: string
+                              status:
+                                type: string
+                              description:
+                                type: string
+                              variables:
+                                type: array
+                                items:
+                                  description: The markdoc partial variable
+                                  properties:
+                                    id:
+                                      type: string
+                                    name:
+                                      type: string
+                                    value:
+                                      type: object
+                                    type:
+                                      type: string
+                                    required:
+                                      type: boolean
+                                    description:
+                                      type: string
+                              partials:
+                                type: array
+                                items:
+                                  description: A product markdoc partial
+                                  properties:
+                                    id:
+                                      type: string
+                                    name:
+                                      type: string
+                                    status:
+                                      type: string
+                                    variables:
+                                      type: array
+                                      items:
+                                        description: The markdoc partial variable
+                                        properties:
+                                          id:
+                                            type: string
+                                          name:
+                                            type: string
+                                          value:
+                                            type: object
+                                          type:
+                                            type: string
+                                          required:
+                                            type: boolean
+                                          description:
+                                            type: string
+                                    description:
+                                      type: string
+                        enableChangingPlans:
+                          type: boolean
+                          description: Flag to indicate if the product allows changing plans.
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example list of products:
+                  description: List of all products that exist on the portal.
+                  value:
+                    content:
+                    - id: 60950a160d4e8b26d3803d40
+                      created: '2022-08-10T12:07:22.551'
+                      updated: '2022-08-10T12:07:22.551'
+                      name: Quote API
+                      title: Quote API
+                      visibility: OPEN
+                      audience: PUBLIC
+                      slug: bike-insurance-pricing-api
+                      active: true
+                      marketings:
+                      - id: 62fbb264cd6d6013b2b8845f
+                      - id: 62fbb264cd6d6013b2b88461
+                      testimonials:
+                      - author: Kitty (CEO)
+                        title: What an amazing experience
+                        content: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
+                        avatar: https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__480.jpg
+                      - author: Doggy (CTO)
+                        title: What an amazing experience
+                        content: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
+                        avatar: https://cdn.pixabay.com/photo/2015/11/17/13/13/bulldog-1047518__480.jpg
+                      description: Enables you to provide your customers with bike insurance pricing from your own user journey.
+                      image:
+                        url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/98f14a79-63ca-4b6a-89bb-9951374ee442.jpeg
+                        name: 98f14a79-63ca-4b6a-89bb-9951374ee442.jpeg
+                      menuItems:
+                        general: {}
+                      version: 42
+                    - id: 6368f3d9fb042b576f6cf279
+                      created: '2023-03-09T16:29:49.831'
+                      updated: '2023-08-04T16:32:57.317'
+                      name: Cypress API - with Plan
+                      title: Cypress API - with Plan
+                      visibility: HIDDEN
+                      audience: INTERNAL
+                      slug: cypress-api-with-plan
+                      active: true
+                      marketings: []
+                      description: ''
+                      image:
+                        url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/4ce5d53d-8d67-40bb-8509-8a7b1f30bb8d.png
+                        name: 4ce5d53d-8d67-40bb-8509-8a7b1f30bb8d.png
+                      menuItems:
+                        general: {}
+                      productCategories:
+                      - id: 64ccfe08cf971679385f10f2
+                      version: 6
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: false
+                        unsorted: false
+                        sorted: true
+                      offset: 0
+                      paged: true
+                      unpaged: false
+                    last: true
+                    totalElements: 2
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: false
+                      unsorted: false
+                      sorted: true
+                    first: true
+                    numberOfElements: 2
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllProducts'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/products/{id}:
+    get:
+      tags:
+      - Products
+      summary: Read Product
+      description: Retrieve a product by id. The product will be returned with all its details.
+      operationId: findProductById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the product to be retrieved.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the product.'
+          content:
+            application/json:
+              schema:
+                description: Product
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  title:
+                    type: string
+                  visibility:
+                    type: string
+                    enum:
+                    - OPEN
+                    - HIDDEN
+                  audience:
+                    type: string
+                    enum:
+                    - PUBLIC
+                    - MANUAL
+                    - INTERNAL
+                  slug:
+                    type: string
+                    description: The url slug of the product
+                  active:
+                    type: boolean
+                  marketings:
+                    type: array
+                    description: List of marketing feature references for this product.
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  testimonials:
+                    type: array
+                    description: List of testimonials for this product.
+                    items:
+                      description: A testimonial for a product
+                      properties:
+                        author:
+                          type: string
+                        title:
+                          type: string
+                        content:
+                          type: string
+                        avatar:
+                          type: string
+                  description:
+                    type: string
+                  image:
+                    description: Image object containing URL, name, width, height and size
+                    properties:
+                      url:
+                        type: string
+                      name:
+                        type: string
+                      width:
+                        type: integer
+                        format: int32
+                      height:
+                        type: integer
+                        format: int32
+                      size:
+                        type: integer
+                        format: int32
+                  menuItems:
+                    description: Custom menu items for this product.
+                    properties:
+                      general:
+                        type: object
+                        additionalProperties:
+                          type: object
+                        properties:
+                          empty:
+                            type: boolean
+                      authorized:
+                        type: object
+                        additionalProperties:
+                          type: object
+                        properties:
+                          empty:
+                            type: boolean
+                      monetization:
+                        description: The monetization configuration interface
+                        discriminator:
+                          propertyName: type
+                        properties:
+                          invoiceAttentionRequiredNotificationEmails:
+                            type: array
+                            items:
+                              type: string
+                          connected:
+                            type: boolean
+                          type:
+                            type: string
+                        required:
+                        - type
+                  groupRefs:
+                    type: array
+                    items:
+                      type: string
+                      description: Reference to an enterprise group that this product is associated with.
+                  productCategories:
+                    type: array
+                    description: List of product categories that this product has been associated with.
+                    items:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                  icon:
+                    description: The icon of the product
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - CUSTOM
+                        - SYSTEM
+                      value:
+                        type: string
+                  cardDisplay:
+                    type: string
+                    enum:
+                    - ICON
+                    - IMAGE
+                  markdocObjects:
+                    type: array
+                    items:
+                      description: A product markdoc object
+                      properties:
+                        name:
+                          type: string
+                        status:
+                          type: string
+                        description:
+                          type: string
+                        variables:
+                          type: array
+                          items:
+                            description: The markdoc partial variable
+                            properties:
+                              id:
+                                type: string
+                              name:
+                                type: string
+                              value:
+                                type: object
+                              type:
+                                type: string
+                              required:
+                                type: boolean
+                              description:
+                                type: string
+                        partials:
+                          type: array
+                          items:
+                            description: A product markdoc partial
+                            properties:
+                              id:
+                                type: string
+                              name:
+                                type: string
+                              status:
+                                type: string
+                              variables:
+                                type: array
+                                items:
+                                  description: The markdoc partial variable
+                                  properties:
+                                    id:
+                                      type: string
+                                    name:
+                                      type: string
+                                    value:
+                                      type: object
+                                    type:
+                                      type: string
+                                    required:
+                                      type: boolean
+                                    description:
+                                      type: string
+                              description:
+                                type: string
+                  enableChangingPlans:
+                    type: boolean
+                    description: Flag to indicate if the product allows changing plans.
+              examples:
+                Example product:
+                  description: Product object with all its details.
+                  value:
+                    id: 60950a160d4e8b26d3803d40
+                    created: '2022-08-10T12:07:22.551'
+                    updated: '2022-08-10T12:07:22.551'
+                    name: Quote API
+                    title: Quote API
+                    visibility: OPEN
+                    audience: PUBLIC
+                    slug: bike-insurance-pricing-api
+                    active: true
+                    marketings:
+                    - id: 62fbb264cd6d6013b2b8845f
+                    - id: 62fbb264cd6d6013b2b88461
+                    testimonials:
+                    - author: Kitty (CEO)
+                      title: What an amazing experience
+                      content: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
+                      avatar: https://cdn.pixabay.com/photo/2015/11/16/14/43/cat-1045782__480.jpg
+                    - author: Doggy (CTO)
+                      title: What an amazing experience
+                      content: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500
+                      avatar: https://cdn.pixabay.com/photo/2015/11/17/13/13/bulldog-1047518__480.jpg
+                    description: Enables you to provide your customers with bike insurance pricing from your own user journey.
+                    image:
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/98f14a79-63ca-4b6a-89bb-9951374ee442.jpeg
+                      name: 98f14a79-63ca-4b6a-89bb-9951374ee442.jpeg
+                    menuItems:
+                      general: {}
+                    version: 42
+        '401':
+          description: 'Unauthorized for operation: findProductById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested product does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the product with the given ID is not found.
+                  value: Product not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

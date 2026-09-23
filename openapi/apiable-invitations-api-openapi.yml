@@ -1,0 +1,822 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Invitations API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Invitations
+  description: Invitations are a way to invite new users to join the platform and team of the inviter. Invitations are typically sent by team members to new users, and can be accepted or ignored by the invitee.
+paths:
+  /api/invitations:
+    get:
+      tags:
+      - Invitations
+      summary: Read Invitations
+      description: List all invitations on the platform that match the pagination and search criteria.
+      operationId: findAllInvitations
+      parameters:
+      - name: page
+        in: query
+        description: The page number of the invitations to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: The number of invitations to be returned per page.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: The sorting criteria for the invitations. The sorting criteria is a list of fields separated by commas.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - created,-email
+      - name: search
+        in: query
+        description: The search criteria for the invitations.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - email.like=example.gmail.com
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of invitations.'
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated invitation results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Invitation object
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        expires:
+                          type: string
+                          format: date-time
+                        invitorEmail:
+                          type: string
+                          description: The email of the invitor
+                        accessDetails:
+                          description: Access details and role that the invited user will have
+                          properties:
+                            roleName:
+                              type: string
+                              enum:
+                              - ADMIN
+                              - READ_ONLY
+                              - RESTRICTED
+                            apiKeys:
+                              type: string
+                              enum:
+                              - NONE
+                              - READ
+                              - FULL
+                            billing:
+                              type: string
+                              enum:
+                              - NONE
+                              - READ
+                              - FULL
+                            teams:
+                              type: string
+                              enum:
+                              - NONE
+                              - READ
+                              - FULL
+                        team:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        status:
+                          type: string
+                          description: The status of the invitation
+                          enum:
+                          - PENDING
+                          - ACCEPTED
+                          - ARCHIVED
+                        invitee:
+                          type: string
+                          description: The user that is invited
+                        invitor:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example list of invitations:
+                  description: List of all invitations that exist on the portal.
+                  value:
+                    content:
+                    - id: 6511731a61c9ae2efbbd8d9d
+                      created: '2023-09-25T14:46:34.34'
+                      updated: '2023-09-25T14:46:34.34'
+                      expires: '2023-10-25T14:46:34.34'
+                      invitee: anna.piable@apiable.io
+                      invitor:
+                        id: 6409edb91c6c14300fce1a3c
+                      accessDetails:
+                        roleName: RESTRICTED
+                        apiKeys: READ
+                        billing: NONE
+                        teams: NONE
+                      team:
+                        id: 6409edb91c6c14300fce1a3a
+                      status: PENDING
+                      version: 0
+                    - id: 6511731a61c9ae2efbbd8d9d
+                      created: '2023-09-25T14:46:34.34'
+                      updated: '2023-09-25T14:46:34.34'
+                      expires: '2023-10-25T14:46:34.34'
+                      invitee: hilbert.piable@apiable.io
+                      invitor:
+                        id: 6409edb91c6c14300fce1a3c
+                      accessDetails:
+                        roleName: RESTRICTED
+                        apiKeys: NONE
+                        billing: NONE
+                        teams: FULL
+                      team:
+                        id: 6409edb91c6c14300fce1a3a
+                      status: PENDING
+                      version: 0
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: false
+                        unsorted: false
+                        sorted: true
+                      offset: 0
+                      paged: true
+                      unpaged: false
+                    last: true
+                    totalElements: 2
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: false
+                      unsorted: false
+                      sorted: true
+                    first: true
+                    numberOfElements: 2
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllInvitations'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+    post:
+      tags:
+      - Invitations
+      summary: Create Invitation
+      description: Create a new invitation to invite a user to join a team. The invitation will be sent to the invitee's email address.
+      operationId: createInvitation
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: The invitation details
+        content:
+          application/json:
+            schema:
+              properties:
+                invitee:
+                  type: string
+                origin:
+                  type: string
+                accessDetails:
+                  description: Access details and role that the invited user will have
+                  properties:
+                    roleName:
+                      type: string
+                      enum:
+                      - ADMIN
+                      - READ_ONLY
+                      - RESTRICTED
+                    apiKeys:
+                      type: string
+                      enum:
+                      - NONE
+                      - READ
+                      - FULL
+                    billing:
+                      type: string
+                      enum:
+                      - NONE
+                      - READ
+                      - FULL
+                    teams:
+                      type: string
+                      enum:
+                      - NONE
+                      - READ
+                      - FULL
+                invitor:
+                  type: string
+                invitorEmail:
+                  type: string
+                team:
+                  description: Unique identifier to an object
+                  properties:
+                    id:
+                      type: string
+            examples:
+              Create invitation:
+                description: Example request body for creating an invitation
+                value:
+                  invitee: anna.piable@apiable.io
+                  team: 62691aa099a7d17e2cac7664
+                  accessDetails:
+                    apiKeys: FULL
+                    billing: READ
+                    teams: FULL
+        required: true
+      responses:
+        '200':
+          description: 'OK: Successfully created the invitation.'
+          content:
+            application/json:
+              schema:
+                description: Invitation object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  expires:
+                    type: string
+                    format: date-time
+                  invitorEmail:
+                    type: string
+                    description: The email of the invitor
+                  accessDetails:
+                    description: Access details and role that the invited user will have
+                    properties:
+                      roleName:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - READ_ONLY
+                        - RESTRICTED
+                      apiKeys:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      billing:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      teams:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  status:
+                    type: string
+                    description: The status of the invitation
+                    enum:
+                    - PENDING
+                    - ACCEPTED
+                    - ARCHIVED
+                  invitee:
+                    type: string
+                    description: The user that is invited
+                  invitor:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+              examples:
+                Created invitation:
+                  description: The newly created invitation object with all its details.
+                  value:
+                    id: 6511731a61c9ae2efbbd8d9d
+                    created: '2023-09-25T14:46:34.34'
+                    updated: '2023-09-25T14:46:34.34'
+                    expires: '2023-10-25T14:46:34.34'
+                    invitee: anna.piable@apiable.io
+                    invitor:
+                      id: 6409edb91c6c14300fce1a3c
+                    accessDetails:
+                      roleName: RESTRICTED
+                      apiKeys: READ
+                      billing: NONE
+                      teams: NONE
+                    team:
+                      id: 6409edb91c6c14300fce1a3a
+                    status: PENDING
+                    version: 0
+        '400':
+          description: 'Bad Request: Invalid invitation data provided.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the invitation data is invalid.
+                  value:
+                    timestamp: '2026-01-16T12:32:00.530+00:00'
+                    status: 400
+                    error: Bad Request
+                    message: 'JSON parse error: Cannot construct instance of `io.apiable.domain.invitation.InvitationCreate`, problem: Invitee email was not a valid email address. Please double check the format and address used.'
+                    path: /api/invitations
+        '401':
+          description: 'Unauthorized for operation: createInvitation'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/invitations/{id}:
+    get:
+      tags:
+      - Invitations
+      summary: Read Invitation
+      description: Retrieve an invitation by id. The invitation will be returned with all its details.
+      operationId: findInvitationById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the invitation to be retrieved.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the invitation.'
+          content:
+            application/json:
+              schema:
+                description: Invitation object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  expires:
+                    type: string
+                    format: date-time
+                  invitorEmail:
+                    type: string
+                    description: The email of the invitor
+                  accessDetails:
+                    description: Access details and role that the invited user will have
+                    properties:
+                      roleName:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - READ_ONLY
+                        - RESTRICTED
+                      apiKeys:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      billing:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      teams:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  status:
+                    type: string
+                    description: The status of the invitation
+                    enum:
+                    - PENDING
+                    - ACCEPTED
+                    - ARCHIVED
+                  invitee:
+                    type: string
+                    description: The user that is invited
+                  invitor:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+              examples:
+                Example invitation:
+                  description: Invitation object with all its details.
+                  value:
+                    id: 6511731a61c9ae2efbbd8d9d
+                    created: '2023-09-25T14:46:34.34'
+                    updated: '2023-09-25T14:46:34.34'
+                    expires: '2023-10-25T14:46:34.34'
+                    invitee: anna.piable@apiable.io
+                    invitor:
+                      id: 6409edb91c6c14300fce1a3c
+                    accessDetails:
+                      roleName: RESTRICTED
+                      apiKeys: READ
+                      billing: NONE
+                      teams: NONE
+                    team:
+                      id: 6409edb91c6c14300fce1a3a
+                    status: PENDING
+                    version: 0
+        '401':
+          description: 'Unauthorized for operation: findInvitationById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested invitation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the invitation with the given ID is not found.
+                  value: Invitation not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+    patch:
+      tags:
+      - Invitations
+      summary: Update an invitation
+      description: Update an existing invitation by its ID. The request body should contain the updated fields.
+      operationId: updateInvitation
+      parameters:
+      - name: id
+        in: path
+        description: Invitation ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateInvitation.'
+        content:
+          application/json:
+            schema:
+              description: Patch object for invitation
+              properties:
+                op:
+                  type: string
+                  description: Supported patch operations
+                  enum:
+                  - replace
+                path:
+                  type: string
+                  description: Supported patch paths for Invitation
+                  enum:
+                  - /expires
+                  - /invitee
+                  - /invitor
+                  - /invitorEmail
+                  - /accessDetails
+                  - /team
+                  - /status
+                value:
+                  type: string
+            examples:
+              Example of patch:
+                summary: Example patch for updating an invitation.
+                description: Example patch for updating an invitation.
+                value:
+                - op: replace
+                  path: /status
+                  value: ARCHIVED
+        required: true
+      responses:
+        '200':
+          description: 'OK: Successfully updated the invitation.'
+          content:
+            application/json:
+              schema:
+                description: Invitation object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  expires:
+                    type: string
+                    format: date-time
+                  invitorEmail:
+                    type: string
+                    description: The email of the invitor
+                  accessDetails:
+                    description: Access details and role that the invited user will have
+                    properties:
+                      roleName:
+                        type: string
+                        enum:
+                        - ADMIN
+                        - READ_ONLY
+                        - RESTRICTED
+                      apiKeys:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      billing:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                      teams:
+                        type: string
+                        enum:
+                        - NONE
+                        - READ
+                        - FULL
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  status:
+                    type: string
+                    description: The status of the invitation
+                    enum:
+                    - PENDING
+                    - ACCEPTED
+                    - ARCHIVED
+                  invitee:
+                    type: string
+                    description: The user that is invited
+                  invitor:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+              examples:
+                Example invitation:
+                  description: Updated invitation object with all its details.
+                  value:
+                    id: 6511731a61c9ae2efbbd8d9d
+                    created: '2023-09-25T14:46:34.34'
+                    updated: '2023-09-25T14:46:34.34'
+                    expires: '2023-10-25T14:46:34.34'
+                    invitee: hilbert.piable@apiable.io
+                    invitor:
+                      id: 6409edb91c6c14300fce1a3c
+                    accessDetails:
+                      roleName: RESTRICTED
+                      apiKeys: NONE
+                      billing: NONE
+                      teams: FULL
+                    team:
+                      id: 6409edb91c6c14300fce1a3a
+                    status: ARCHIVED
+                    version: 1
+        '401':
+          description: 'Unauthorized for operation: updateInvitation'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested invitation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the invitation with the given ID is not found.
+                  value: Invitation not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

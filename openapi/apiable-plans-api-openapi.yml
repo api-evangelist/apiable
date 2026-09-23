@@ -1,0 +1,4461 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Plans API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Plans
+  description: Plans are a way to group APIs and their documentation.
+paths:
+  /api/plans/{id}/docs:
+    get:
+      tags:
+      - Plans
+      summary: Get the plan-level docs of the plan specified by the plan id
+      description: This endpoint will return the plan-level docs of the specified plan
+      operationId: getDocsOfPlanById_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: A list of plan-leve documentation for the specified plan
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: The documentation version for a plan.
+                  properties:
+                    id:
+                      type: string
+                    order:
+                      type: integer
+                      format: int32
+                      description: The order of the documentation in the list of documentation for the plan.
+                    version:
+                      type: string
+                      description: The version of the documentation.
+                    status:
+                      type: array
+                      description: The status of the documentation.
+                      items:
+                        type: string
+                        description: The status of the documentation.
+                    active:
+                      type: boolean
+                      description: Flag to indicate if the documentation is active.
+                    visible:
+                      type: boolean
+                      description: The visibility of the documentation.
+                    retrievalType:
+                      type: string
+                      description: The retrieval type of the documentation.
+                      enum:
+                      - MANUAL
+                      - GATEWAY
+                      - CICD
+                      - CATALOG
+                    url:
+                      type: string
+                      description: The URL of the documentation.
+                    name:
+                      type: string
+                      description: The name of the documentation.
+                    synced:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the last time the documentation was synchronized.
+                    sdks:
+                      type: array
+                      description: List of SDKs associated with this documentation version.
+                      items:
+                        description: SDK information for a documentation version.
+                        properties:
+                          language:
+                            type: string
+                            description: The programming language of the SDK.
+                          downloadUrl:
+                            type: string
+                            description: The download URL of the SDK.
+                          visibility:
+                            type: string
+                            description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                            enum:
+                            - PUBLIC
+                            - PRIVATE
+                            - SUBSCRIBERS
+                    catalogApi:
+                      type: string
+                    planId:
+                      type: string
+                      readOnly: true
+                    planDocLevel:
+                      type: string
+                      description: Documentation level of the documentation.
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                      readOnly: true
+                    apiIntegrationId:
+                      type: string
+                      description: Reference to the API if the documentation is bound to an API object.
+                      readOnly: true
+                    custom:
+                      type: boolean
+              example:
+              - id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: getDocsOfPlanById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    post:
+      tags:
+      - Plans
+      summary: Create the plan-level doc to the plan
+      description: This endpoint will create the plan-level doc of the specified plan
+      operationId: createDocByPlanIntegrationId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: The API documentation version to be created for the plan.
+        content:
+          application/json:
+            schema:
+              description: The documentation version for a plan.
+              properties:
+                id:
+                  type: string
+                order:
+                  type: integer
+                  format: int32
+                  description: The order of the documentation in the list of documentation for the plan.
+                version:
+                  type: string
+                  description: The version of the documentation.
+                status:
+                  type: array
+                  description: The status of the documentation.
+                  items:
+                    type: string
+                    description: The status of the documentation.
+                active:
+                  type: boolean
+                  description: Flag to indicate if the documentation is active.
+                visible:
+                  type: boolean
+                  description: The visibility of the documentation.
+                retrievalType:
+                  type: string
+                  description: The retrieval type of the documentation.
+                  enum:
+                  - MANUAL
+                  - GATEWAY
+                  - CICD
+                  - CATALOG
+                url:
+                  type: string
+                  description: The URL of the documentation.
+                name:
+                  type: string
+                  description: The name of the documentation.
+                synced:
+                  type: string
+                  format: date-time
+                  description: Timestamp of the last time the documentation was synchronized.
+                sdks:
+                  type: array
+                  description: List of SDKs associated with this documentation version.
+                  items:
+                    description: SDK information for a documentation version.
+                    properties:
+                      language:
+                        type: string
+                        description: The programming language of the SDK.
+                      downloadUrl:
+                        type: string
+                        description: The download URL of the SDK.
+                      visibility:
+                        type: string
+                        description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                        enum:
+                        - PUBLIC
+                        - PRIVATE
+                        - SUBSCRIBERS
+                catalogApi:
+                  type: string
+                planId:
+                  type: string
+                  readOnly: true
+                planDocLevel:
+                  type: string
+                  description: Documentation level of the documentation.
+                  enum:
+                  - PLAN
+                  - API
+                  - CUSTOM
+                  readOnly: true
+                apiIntegrationId:
+                  type: string
+                  description: Reference to the API if the documentation is bound to an API object.
+                  readOnly: true
+                custom:
+                  type: boolean
+            examples:
+              Example API documentation creation:
+                description: API documentation version to be created for the specified plan.
+                value:
+                  order: 0
+                  version: '2.0'
+                  status: []
+                  active: true
+                  visible: true
+                  retrievalType: GATEWAY
+                  url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                  name: Jokes (Cognito) - prod-202481-v-1.0.json
+                  planId: 66f174095cc1da3963b9a1d7
+                  planDocLevel: API
+                  apiIntegrationId: cl4z2nr4p8
+        required: true
+      responses:
+        '200':
+          description: The created documentation for the specified plan
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f172d43ee464553f9fe898
+                order: 0
+                version: '1.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazingDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                synced: '2024-09-23T13:58:22.665'
+        '401':
+          description: 'Unauthorized for operation: createDocByPlanIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/{id}/apis/{integrationId}/docs:
+    get:
+      tags:
+      - Plans
+      summary: Get the api-level docs of all apis specified by the API integrationId in the…
+      description: This endpoint will return the api-level docs of the specified api in the plan
+      operationId: getDocsOfApiByIntegrationIdAndPlanId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: A list of api-level documentation for the specified APIs in the plan
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: The documentation version for a plan.
+                  properties:
+                    id:
+                      type: string
+                    order:
+                      type: integer
+                      format: int32
+                      description: The order of the documentation in the list of documentation for the plan.
+                    version:
+                      type: string
+                      description: The version of the documentation.
+                    status:
+                      type: array
+                      description: The status of the documentation.
+                      items:
+                        type: string
+                        description: The status of the documentation.
+                    active:
+                      type: boolean
+                      description: Flag to indicate if the documentation is active.
+                    visible:
+                      type: boolean
+                      description: The visibility of the documentation.
+                    retrievalType:
+                      type: string
+                      description: The retrieval type of the documentation.
+                      enum:
+                      - MANUAL
+                      - GATEWAY
+                      - CICD
+                      - CATALOG
+                    url:
+                      type: string
+                      description: The URL of the documentation.
+                    name:
+                      type: string
+                      description: The name of the documentation.
+                    synced:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the last time the documentation was synchronized.
+                    sdks:
+                      type: array
+                      description: List of SDKs associated with this documentation version.
+                      items:
+                        description: SDK information for a documentation version.
+                        properties:
+                          language:
+                            type: string
+                            description: The programming language of the SDK.
+                          downloadUrl:
+                            type: string
+                            description: The download URL of the SDK.
+                          visibility:
+                            type: string
+                            description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                            enum:
+                            - PUBLIC
+                            - PRIVATE
+                            - SUBSCRIBERS
+                    catalogApi:
+                      type: string
+                    planId:
+                      type: string
+                      readOnly: true
+                    planDocLevel:
+                      type: string
+                      description: Documentation level of the documentation.
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                      readOnly: true
+                    apiIntegrationId:
+                      type: string
+                      description: Reference to the API if the documentation is bound to an API object.
+                      readOnly: true
+                    custom:
+                      type: boolean
+              example:
+              - id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: getDocsOfApiByIntegrationIdAndPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    post:
+      tags:
+      - Plans
+      summary: Create the api-level doc to all apis specified by the API integrationId in the…
+      description: This endpoint will create the api-level doc of the specified api in the plan
+      operationId: createDocByPlanIdAndApiIntegrationId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: The API documentation version to be created for the plan.
+        content:
+          application/json:
+            schema:
+              description: The documentation version for a plan.
+              properties:
+                id:
+                  type: string
+                order:
+                  type: integer
+                  format: int32
+                  description: The order of the documentation in the list of documentation for the plan.
+                version:
+                  type: string
+                  description: The version of the documentation.
+                status:
+                  type: array
+                  description: The status of the documentation.
+                  items:
+                    type: string
+                    description: The status of the documentation.
+                active:
+                  type: boolean
+                  description: Flag to indicate if the documentation is active.
+                visible:
+                  type: boolean
+                  description: The visibility of the documentation.
+                retrievalType:
+                  type: string
+                  description: The retrieval type of the documentation.
+                  enum:
+                  - MANUAL
+                  - GATEWAY
+                  - CICD
+                  - CATALOG
+                url:
+                  type: string
+                  description: The URL of the documentation.
+                name:
+                  type: string
+                  description: The name of the documentation.
+                synced:
+                  type: string
+                  format: date-time
+                  description: Timestamp of the last time the documentation was synchronized.
+                sdks:
+                  type: array
+                  description: List of SDKs associated with this documentation version.
+                  items:
+                    description: SDK information for a documentation version.
+                    properties:
+                      language:
+                        type: string
+                        description: The programming language of the SDK.
+                      downloadUrl:
+                        type: string
+                        description: The download URL of the SDK.
+                      visibility:
+                        type: string
+                        description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                        enum:
+                        - PUBLIC
+                        - PRIVATE
+                        - SUBSCRIBERS
+                catalogApi:
+                  type: string
+                planId:
+                  type: string
+                  readOnly: true
+                planDocLevel:
+                  type: string
+                  description: Documentation level of the documentation.
+                  enum:
+                  - PLAN
+                  - API
+                  - CUSTOM
+                  readOnly: true
+                apiIntegrationId:
+                  type: string
+                  description: Reference to the API if the documentation is bound to an API object.
+                  readOnly: true
+                custom:
+                  type: boolean
+            examples:
+              Example API documentation creation:
+                description: API documentation version to be created for the specified plan.
+                value:
+                  order: 0
+                  version: '2.0'
+                  status: []
+                  active: true
+                  visible: true
+                  retrievalType: GATEWAY
+                  url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                  name: Jokes (Cognito) - prod-202481-v-1.0.json
+                  planId: 66f174095cc1da3963b9a1d7
+                  planDocLevel: API
+                  apiIntegrationId: cl4z2nr4p8
+        required: true
+      responses:
+        '200':
+          description: The created documentation for the specified APIs in the plan
+          content:
+            application/json:
+              schema:
+                description: Details of a plan including documentation.
+                properties:
+                  id:
+                    type: string
+                  documentationLevel:
+                    type: string
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                  documentationPublic:
+                    type: boolean
+                  planLevelDocs:
+                    type: array
+                    items:
+                      description: The documentation version for a plan.
+                      properties:
+                        id:
+                          type: string
+                        order:
+                          type: integer
+                          format: int32
+                          description: The order of the documentation in the list of documentation for the plan.
+                        version:
+                          type: string
+                          description: The version of the documentation.
+                        status:
+                          type: array
+                          description: The status of the documentation.
+                          items:
+                            type: string
+                            description: The status of the documentation.
+                        active:
+                          type: boolean
+                          description: Flag to indicate if the documentation is active.
+                        visible:
+                          type: boolean
+                          description: The visibility of the documentation.
+                        retrievalType:
+                          type: string
+                          description: The retrieval type of the documentation.
+                          enum:
+                          - MANUAL
+                          - GATEWAY
+                          - CICD
+                          - CATALOG
+                        url:
+                          type: string
+                          description: The URL of the documentation.
+                        name:
+                          type: string
+                          description: The name of the documentation.
+                        synced:
+                          type: string
+                          format: date-time
+                          description: Timestamp of the last time the documentation was synchronized.
+                        sdks:
+                          type: array
+                          description: List of SDKs associated with this documentation version.
+                          items:
+                            description: SDK information for a documentation version.
+                            properties:
+                              language:
+                                type: string
+                                description: The programming language of the SDK.
+                              downloadUrl:
+                                type: string
+                                description: The download URL of the SDK.
+                              visibility:
+                                type: string
+                                description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                enum:
+                                - PUBLIC
+                                - PRIVATE
+                                - SUBSCRIBERS
+                        catalogApi:
+                          type: string
+                        planId:
+                          type: string
+                          readOnly: true
+                        planDocLevel:
+                          type: string
+                          description: Documentation level of the documentation.
+                          enum:
+                          - PLAN
+                          - API
+                          - CUSTOM
+                          readOnly: true
+                        apiIntegrationId:
+                          type: string
+                          description: Reference to the API if the documentation is bound to an API object.
+                          readOnly: true
+                        custom:
+                          type: boolean
+                  apiLevelDocs:
+                    type: array
+                    items:
+                      description: The documentation version for a plan.
+                      properties:
+                        id:
+                          type: string
+                        order:
+                          type: integer
+                          format: int32
+                          description: The order of the documentation in the list of documentation for the plan.
+                        version:
+                          type: string
+                          description: The version of the documentation.
+                        status:
+                          type: array
+                          description: The status of the documentation.
+                          items:
+                            type: string
+                            description: The status of the documentation.
+                        active:
+                          type: boolean
+                          description: Flag to indicate if the documentation is active.
+                        visible:
+                          type: boolean
+                          description: The visibility of the documentation.
+                        retrievalType:
+                          type: string
+                          description: The retrieval type of the documentation.
+                          enum:
+                          - MANUAL
+                          - GATEWAY
+                          - CICD
+                          - CATALOG
+                        url:
+                          type: string
+                          description: The URL of the documentation.
+                        name:
+                          type: string
+                          description: The name of the documentation.
+                        synced:
+                          type: string
+                          format: date-time
+                          description: Timestamp of the last time the documentation was synchronized.
+                        sdks:
+                          type: array
+                          description: List of SDKs associated with this documentation version.
+                          items:
+                            description: SDK information for a documentation version.
+                            properties:
+                              language:
+                                type: string
+                                description: The programming language of the SDK.
+                              downloadUrl:
+                                type: string
+                                description: The download URL of the SDK.
+                              visibility:
+                                type: string
+                                description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                enum:
+                                - PUBLIC
+                                - PRIVATE
+                                - SUBSCRIBERS
+                        catalogApi:
+                          type: string
+                        planId:
+                          type: string
+                          readOnly: true
+                        planDocLevel:
+                          type: string
+                          description: Documentation level of the documentation.
+                          enum:
+                          - PLAN
+                          - API
+                          - CUSTOM
+                          readOnly: true
+                        apiIntegrationId:
+                          type: string
+                          description: Reference to the API if the documentation is bound to an API object.
+                          readOnly: true
+                        custom:
+                          type: boolean
+              example:
+                id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: createDocByPlanIdAndApiIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/apis/{integrationId}/docs:
+    get:
+      tags:
+      - Plans
+      summary: Get the api-level docs of all apis specified by the API integrationId of all…
+      description: This endpoint will return the api-level docs of the specified api across all plans
+      operationId: getDocsOfApiByIntegrationId_1
+      parameters:
+      - name: integrationId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: A list of api-level documentation for the specified APIs across all plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: The documentation version for a plan.
+                  properties:
+                    id:
+                      type: string
+                    order:
+                      type: integer
+                      format: int32
+                      description: The order of the documentation in the list of documentation for the plan.
+                    version:
+                      type: string
+                      description: The version of the documentation.
+                    status:
+                      type: array
+                      description: The status of the documentation.
+                      items:
+                        type: string
+                        description: The status of the documentation.
+                    active:
+                      type: boolean
+                      description: Flag to indicate if the documentation is active.
+                    visible:
+                      type: boolean
+                      description: The visibility of the documentation.
+                    retrievalType:
+                      type: string
+                      description: The retrieval type of the documentation.
+                      enum:
+                      - MANUAL
+                      - GATEWAY
+                      - CICD
+                      - CATALOG
+                    url:
+                      type: string
+                      description: The URL of the documentation.
+                    name:
+                      type: string
+                      description: The name of the documentation.
+                    synced:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the last time the documentation was synchronized.
+                    sdks:
+                      type: array
+                      description: List of SDKs associated with this documentation version.
+                      items:
+                        description: SDK information for a documentation version.
+                        properties:
+                          language:
+                            type: string
+                            description: The programming language of the SDK.
+                          downloadUrl:
+                            type: string
+                            description: The download URL of the SDK.
+                          visibility:
+                            type: string
+                            description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                            enum:
+                            - PUBLIC
+                            - PRIVATE
+                            - SUBSCRIBERS
+                    catalogApi:
+                      type: string
+                    planId:
+                      type: string
+                      readOnly: true
+                    planDocLevel:
+                      type: string
+                      description: Documentation level of the documentation.
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                      readOnly: true
+                    apiIntegrationId:
+                      type: string
+                      description: Reference to the API if the documentation is bound to an API object.
+                      readOnly: true
+                    custom:
+                      type: boolean
+              example:
+              - id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: getDocsOfApiByIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    post:
+      tags:
+      - Plans
+      summary: Create the api-level doc to all apis specified by the API integrationId
+      description: This endpoint will create the api-level doc of the specified api across all plans
+      operationId: createDocByApiIntegrationId_1
+      parameters:
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: The API documentation version to be created for the plan.
+        content:
+          application/json:
+            schema:
+              description: The documentation version for a plan.
+              properties:
+                id:
+                  type: string
+                order:
+                  type: integer
+                  format: int32
+                  description: The order of the documentation in the list of documentation for the plan.
+                version:
+                  type: string
+                  description: The version of the documentation.
+                status:
+                  type: array
+                  description: The status of the documentation.
+                  items:
+                    type: string
+                    description: The status of the documentation.
+                active:
+                  type: boolean
+                  description: Flag to indicate if the documentation is active.
+                visible:
+                  type: boolean
+                  description: The visibility of the documentation.
+                retrievalType:
+                  type: string
+                  description: The retrieval type of the documentation.
+                  enum:
+                  - MANUAL
+                  - GATEWAY
+                  - CICD
+                  - CATALOG
+                url:
+                  type: string
+                  description: The URL of the documentation.
+                name:
+                  type: string
+                  description: The name of the documentation.
+                synced:
+                  type: string
+                  format: date-time
+                  description: Timestamp of the last time the documentation was synchronized.
+                sdks:
+                  type: array
+                  description: List of SDKs associated with this documentation version.
+                  items:
+                    description: SDK information for a documentation version.
+                    properties:
+                      language:
+                        type: string
+                        description: The programming language of the SDK.
+                      downloadUrl:
+                        type: string
+                        description: The download URL of the SDK.
+                      visibility:
+                        type: string
+                        description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                        enum:
+                        - PUBLIC
+                        - PRIVATE
+                        - SUBSCRIBERS
+                catalogApi:
+                  type: string
+                planId:
+                  type: string
+                  readOnly: true
+                planDocLevel:
+                  type: string
+                  description: Documentation level of the documentation.
+                  enum:
+                  - PLAN
+                  - API
+                  - CUSTOM
+                  readOnly: true
+                apiIntegrationId:
+                  type: string
+                  description: Reference to the API if the documentation is bound to an API object.
+                  readOnly: true
+                custom:
+                  type: boolean
+            examples:
+              Example API documentation creation:
+                description: API documentation version to be created for the specified plan.
+                value:
+                  order: 0
+                  version: '2.0'
+                  status: []
+                  active: true
+                  visible: true
+                  retrievalType: GATEWAY
+                  url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                  name: Jokes (Cognito) - prod-202481-v-1.0.json
+                  planId: 66f174095cc1da3963b9a1d7
+                  planDocLevel: API
+                  apiIntegrationId: cl4z2nr4p8
+        required: true
+      responses:
+        '200':
+          description: The created documentation for the specified APIs across all plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: The documentation version for a plan.
+                  properties:
+                    id:
+                      type: string
+                    order:
+                      type: integer
+                      format: int32
+                      description: The order of the documentation in the list of documentation for the plan.
+                    version:
+                      type: string
+                      description: The version of the documentation.
+                    status:
+                      type: array
+                      description: The status of the documentation.
+                      items:
+                        type: string
+                        description: The status of the documentation.
+                    active:
+                      type: boolean
+                      description: Flag to indicate if the documentation is active.
+                    visible:
+                      type: boolean
+                      description: The visibility of the documentation.
+                    retrievalType:
+                      type: string
+                      description: The retrieval type of the documentation.
+                      enum:
+                      - MANUAL
+                      - GATEWAY
+                      - CICD
+                      - CATALOG
+                    url:
+                      type: string
+                      description: The URL of the documentation.
+                    name:
+                      type: string
+                      description: The name of the documentation.
+                    synced:
+                      type: string
+                      format: date-time
+                      description: Timestamp of the last time the documentation was synchronized.
+                    sdks:
+                      type: array
+                      description: List of SDKs associated with this documentation version.
+                      items:
+                        description: SDK information for a documentation version.
+                        properties:
+                          language:
+                            type: string
+                            description: The programming language of the SDK.
+                          downloadUrl:
+                            type: string
+                            description: The download URL of the SDK.
+                          visibility:
+                            type: string
+                            description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                            enum:
+                            - PUBLIC
+                            - PRIVATE
+                            - SUBSCRIBERS
+                    catalogApi:
+                      type: string
+                    planId:
+                      type: string
+                      readOnly: true
+                    planDocLevel:
+                      type: string
+                      description: Documentation level of the documentation.
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                      readOnly: true
+                    apiIntegrationId:
+                      type: string
+                      description: Reference to the API if the documentation is bound to an API object.
+                      readOnly: true
+                    custom:
+                      type: boolean
+              example:
+              - id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: createDocByApiIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/{id}/docs/{docId}:
+    get:
+      tags:
+      - Plans
+      summary: Get the plan-level doc of the plan specified by the plan id
+      description: This endpoint will return the plan-level doc of the specified plan
+      operationId: getDocOfPlanById_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: The specified plan-level documentation for the specified plan
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f172d43ee464553f9fe898
+                order: 0
+                version: '1.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazingDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                synced: '2024-09-23T13:58:22.665'
+        '401':
+          description: 'Unauthorized for operation: getDocOfPlanById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    delete:
+      tags:
+      - Plans
+      summary: Delete a plan level documentation from a plan
+      description: Delete a specific plan level documentation by its ID from the plan. This endpoint allows you to remove a documentation version that is associated with the plan.
+      operationId: deletePlanDocumentationByPlanId
+      parameters:
+      - name: id
+        in: path
+        description: The id of the plan from which the documentation will be deleted.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: docId
+        in: path
+        description: The id of the documentation to be deleted.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '204':
+          description: 'No Content: Successfully deleted the plan documentation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the plan documentation is successfully deleted.
+                  value: Plan documentation deleted successfully
+        '401':
+          description: 'Unauthorized for operation: deletePlanDocumentationByPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested plan or documentation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the plan or documentation with the given ID is not found.
+                  value: Plan or Documentation not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    patch:
+      tags:
+      - Plans
+      summary: Patch the plan-level doc
+      description: The supported operation is replace, and the supported paths are url, version, name
+      operationId: patchDocByPlanId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: 'Request body for operation: patchDocByPlanId_1.'
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The patch body
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Patch Example:
+                description: Example of a patch operation to update the documentation name.
+                value:
+                - op: replace
+                  path: /name
+                  value: new doc name
+        required: true
+      responses:
+        '200':
+          description: The updated documentation
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f172d43ee464553f9fe898
+                order: 0
+                version: '1.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazingDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                synced: '2024-09-23T13:58:22.665'
+        '401':
+          description: 'Unauthorized for operation: patchDocByPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/{id}/apis/{integrationId}/docs/{docId}:
+    get:
+      tags:
+      - Plans
+      summary: Get the api-level doc of all apis specified by the API integrationId
+      description: This endpoint will return the api-level doc of the specified api in the plan
+      operationId: getDocOfApiByIntegrationIdAndPlanId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: The specified documentation for the specified APIs in the plan
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: getDocOfApiByIntegrationIdAndPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    delete:
+      tags:
+      - Plans
+      summary: Delete an API level documentation from a plan
+      description: Delete a specific API level documentation by its ID from the plan. This endpoint allows you to remove a documentation version that is associated with the plan and API.
+      operationId: deleteApiLevelDocumentationByPlanId
+      parameters:
+      - name: id
+        in: path
+        description: The id of the plan from which the API documentation will be deleted.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: docId
+        in: path
+        description: The id of the API documentation to be deleted.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: integrationId
+        in: path
+        description: The id of the API integration associated with the documentation.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: cl4z2nr4p8
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '204':
+          description: 'No Content: Successfully deleted the API level documentation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the API level documentation is successfully deleted.
+                  value: API level documentation deleted successfully
+        '401':
+          description: 'Unauthorized for operation: deleteApiLevelDocumentationByPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested plan or API documentation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the plan or API documentation with the given ID is not found.
+                  value: Plan or API Documentation not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    patch:
+      tags:
+      - Plans
+      summary: Patch the api-level doc
+      description: The supported operation is replace, and the supported paths are url, version, name
+      operationId: patchDocByPlanIdAndApiIntegrationId_1
+      parameters:
+      - name: id
+        in: path
+        description: The plan id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: 'Request body for operation: patchDocByPlanIdAndApiIntegrationId_1.'
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The patch body
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Patch Example:
+                description: Example of a patch operation to update the documentation name.
+                value:
+                - op: replace
+                  path: /name
+                  value: new doc name
+        required: true
+      responses:
+        '200':
+          description: The updated documentation
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: patchDocByPlanIdAndApiIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/apis/{integrationId}/docs/{docId}:
+    get:
+      tags:
+      - Plans
+      summary: Get the api-level doc of all apis specified by the API integrationId
+      description: This endpoint will return the api-level doc of the specified api across all plans
+      operationId: getDocOfApiByIntegrationId_1
+      parameters:
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: The specified documentation for the specified APIs across all plans
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: getDocOfApiByIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    delete:
+      tags:
+      - Plans
+      summary: Delete an api level documentation from a plan
+      description: Deletes an api-level documentation entry from the plans containing the specified API.
+      operationId: deleteApiLevelDocumentation
+      parameters:
+      - name: docId
+        in: path
+        description: The id of the API documentation to be deleted.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 66f174095cc1da3963b9a1d7
+      - name: integrationId
+        in: path
+        description: The id of the API integration associated with the documentation.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: cl4z2nr4p8
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '204':
+          description: 'No Content: Successfully deleted the API level documentation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the API level documentation is successfully deleted.
+                  value: API level documentation deleted successfully
+        '401':
+          description: 'Unauthorized for operation: deleteApiLevelDocumentation'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested plan or API documentation does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the plan or API documentation with the given ID is not found.
+                  value: Plan or API Documentation not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+    patch:
+      tags:
+      - Plans
+      summary: Patch the api-level doc
+      description: The supported operation is replace, and the supported paths are url, version, name
+      operationId: patchDocByApiIntegrationId_1
+      parameters:
+      - name: integrationId
+        in: path
+        description: The API integrationId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docId
+        in: path
+        description: The documentation id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      requestBody:
+        description: 'Request body for operation: patchDocByApiIntegrationId_1.'
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The patch body
+              items:
+                description: Patch object for JSON Patch
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Path to the field to be patched
+                  value:
+                    type: string
+                    description: Value to be patched
+            examples:
+              Patch Example:
+                description: Example of a patch operation to update the documentation name.
+                value:
+                - op: replace
+                  path: /name
+                  value: new doc name
+        required: true
+      responses:
+        '200':
+          description: The updated documentation
+          content:
+            application/json:
+              schema:
+                description: The documentation version for a plan.
+                properties:
+                  id:
+                    type: string
+                  order:
+                    type: integer
+                    format: int32
+                    description: The order of the documentation in the list of documentation for the plan.
+                  version:
+                    type: string
+                    description: The version of the documentation.
+                  status:
+                    type: array
+                    description: The status of the documentation.
+                    items:
+                      type: string
+                      description: The status of the documentation.
+                  active:
+                    type: boolean
+                    description: Flag to indicate if the documentation is active.
+                  visible:
+                    type: boolean
+                    description: The visibility of the documentation.
+                  retrievalType:
+                    type: string
+                    description: The retrieval type of the documentation.
+                    enum:
+                    - MANUAL
+                    - GATEWAY
+                    - CICD
+                    - CATALOG
+                  url:
+                    type: string
+                    description: The URL of the documentation.
+                  name:
+                    type: string
+                    description: The name of the documentation.
+                  synced:
+                    type: string
+                    format: date-time
+                    description: Timestamp of the last time the documentation was synchronized.
+                  sdks:
+                    type: array
+                    description: List of SDKs associated with this documentation version.
+                    items:
+                      description: SDK information for a documentation version.
+                      properties:
+                        language:
+                          type: string
+                          description: The programming language of the SDK.
+                        downloadUrl:
+                          type: string
+                          description: The download URL of the SDK.
+                        visibility:
+                          type: string
+                          description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                          enum:
+                          - PUBLIC
+                          - PRIVATE
+                          - SUBSCRIBERS
+                  catalogApi:
+                    type: string
+                  planId:
+                    type: string
+                    readOnly: true
+                  planDocLevel:
+                    type: string
+                    description: Documentation level of the documentation.
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                    readOnly: true
+                  apiIntegrationId:
+                    type: string
+                    description: Reference to the API if the documentation is bound to an API object.
+                    readOnly: true
+                  custom:
+                    type: boolean
+              example:
+                id: 66f3c2be7903d41208214a7d
+                order: 0
+                version: '2.0'
+                status: []
+                active: true
+                visible: true
+                retrievalType: GATEWAY
+                url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/amazonGatewayDocumentation.json
+                name: Jokes (Cognito) - prod-202481-v-1.0.json
+                planId: 66f174095cc1da3963b9a1d7
+                planDocLevel: PLAN
+                apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: patchDocByApiIntegrationId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans:
+    get:
+      tags:
+      - Plans
+      summary: Read Plans
+      description: List all plans on the platform that match the pagination and search criteria.
+      operationId: findAllPlans
+      parameters:
+      - name: page
+        in: query
+        description: The page number of the plans to be returned.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: The number of plans to be returned per page.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: The sorting criteria for the plans. The sorting criteria is a list of fields separated by commas.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name:DESC
+      - name: search
+        in: query
+        description: The search criteria for the plans.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - product.id.match=60950a160d4e8b26d3803d40
+        - name.like=example
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of plans.'
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated plan results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Plan object. A plan is a set of APIs and properties that can be subscribed to by users.
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        ancestorPlanId:
+                          type: string
+                        approvalGroupIdRef:
+                          type: string
+                          description: The approval group ID reference for the plan.
+                        apis:
+                          type: array
+                          description: List of APIs included in the plan.
+                          items:
+                            description: API item
+                            discriminator:
+                              propertyName: type
+                            properties:
+                              name:
+                                type: string
+                              resources:
+                                type: array
+                                items:
+                                  description: The Resource schema is used to represent a resource in the API gateway. It includes details such as the path, method, and the integration ID.
+                                  properties:
+                                    path:
+                                      type: string
+                                    method:
+                                      type: string
+                                    integrationId:
+                                      type: string
+                              type:
+                                type: string
+                                enum:
+                                - KONG
+                                - AMAZON
+                                - AMAZONEE
+                                - AZURE
+                                - APIGEE
+                              url:
+                                type: string
+                              integrationId:
+                                type: string
+                              documentations:
+                                type: array
+                                items:
+                                  description: The documentation version for a plan.
+                                  properties:
+                                    id:
+                                      type: string
+                                    order:
+                                      type: integer
+                                      format: int32
+                                      description: The order of the documentation in the list of documentation for the plan.
+                                    version:
+                                      type: string
+                                      description: The version of the documentation.
+                                    status:
+                                      type: array
+                                      description: The status of the documentation.
+                                      items:
+                                        type: string
+                                        description: The status of the documentation.
+                                    active:
+                                      type: boolean
+                                      description: Flag to indicate if the documentation is active.
+                                    visible:
+                                      type: boolean
+                                      description: The visibility of the documentation.
+                                    retrievalType:
+                                      type: string
+                                      description: The retrieval type of the documentation.
+                                      enum:
+                                      - MANUAL
+                                      - GATEWAY
+                                      - CICD
+                                      - CATALOG
+                                    url:
+                                      type: string
+                                      description: The URL of the documentation.
+                                    name:
+                                      type: string
+                                      description: The name of the documentation.
+                                    synced:
+                                      type: string
+                                      format: date-time
+                                      description: Timestamp of the last time the documentation was synchronized.
+                                    sdks:
+                                      type: array
+                                      description: List of SDKs associated with this documentation version.
+                                      items:
+                                        description: SDK information for a documentation version.
+                                        properties:
+                                          language:
+                                            type: string
+                                            description: The programming language of the SDK.
+                                          downloadUrl:
+                                            type: string
+                                            description: The download URL of the SDK.
+                                          visibility:
+                                            type: string
+                                            description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                            enum:
+                                            - PUBLIC
+                                            - PRIVATE
+                                            - SUBSCRIBERS
+                                    catalogApi:
+                                      type: string
+                                    planId:
+                                      type: string
+                                      readOnly: true
+                                    planDocLevel:
+                                      type: string
+                                      description: Documentation level of the documentation.
+                                      enum:
+                                      - PLAN
+                                      - API
+                                      - CUSTOM
+                                      readOnly: true
+                                    apiIntegrationId:
+                                      type: string
+                                      description: Reference to the API if the documentation is bound to an API object.
+                                      readOnly: true
+                                    custom:
+                                      type: boolean
+                              serviceIntegrationId:
+                                type: string
+                        propertiesDescription:
+                          type: string
+                          description: The description of the properties of the plan.
+                        propertiesTabName:
+                          type: string
+                          description: The name of the tab to display the properties of the plan.
+                        customProperties:
+                          type: array
+                          description: List of available custom properties of the plan.
+                          items:
+                            description: Custom Property
+                            discriminator:
+                              propertyName: type
+                            properties:
+                              readOnly:
+                                type: boolean
+                                description: Whether the custom property is read only
+                              id:
+                                type: string
+                              type:
+                                type: string
+                                description: The type of the custom property
+                                enum:
+                                - STRING
+                                - NUMBER
+                                - BOOLEAN
+                                - TEXT
+                                - OPTIONS
+                                - MULTI_OPTIONS
+                              description:
+                                type: string
+                                description: The description of the custom property
+                              includeInSubscriptionWizard:
+                                type: boolean
+                                description: Whether the custom property is included in the subscription wizard
+                              required:
+                                type: boolean
+                                description: Whether the custom property is required
+                              display:
+                                type: string
+                                description: The display name of the custom property
+                        description:
+                          type: string
+                          description: A brief, optional description of the plan to present to end user to help them select the correct plan.
+                        documentationLevel:
+                          type: string
+                          description: The documentation level of the plan. Used to decide what level of documentation should be displayed on the portal.
+                          enum:
+                          - PLAN
+                          - API
+                          - CUSTOM
+                        documentationPublic:
+                          type: boolean
+                          description: Whether the documentation is public or not.
+                        documentations:
+                          type: array
+                          description: List of documentation versions for the plan.
+                          items:
+                            description: The documentation version for a plan.
+                            properties:
+                              id:
+                                type: string
+                              order:
+                                type: integer
+                                format: int32
+                                description: The order of the documentation in the list of documentation for the plan.
+                              version:
+                                type: string
+                                description: The version of the documentation.
+                              status:
+                                type: array
+                                description: The status of the documentation.
+                                items:
+                                  type: string
+                                  description: The status of the documentation.
+                              active:
+                                type: boolean
+                                description: Flag to indicate if the documentation is active.
+                              visible:
+                                type: boolean
+                                description: The visibility of the documentation.
+                              retrievalType:
+                                type: string
+                                description: The retrieval type of the documentation.
+                                enum:
+                                - MANUAL
+                                - GATEWAY
+                                - CICD
+                                - CATALOG
+                              url:
+                                type: string
+                                description: The URL of the documentation.
+                              name:
+                                type: string
+                                description: The name of the documentation.
+                              synced:
+                                type: string
+                                format: date-time
+                                description: Timestamp of the last time the documentation was synchronized.
+                              sdks:
+                                type: array
+                                description: List of SDKs associated with this documentation version.
+                                items:
+                                  description: SDK information for a documentation version.
+                                  properties:
+                                    language:
+                                      type: string
+                                      description: The programming language of the SDK.
+                                    downloadUrl:
+                                      type: string
+                                      description: The download URL of the SDK.
+                                    visibility:
+                                      type: string
+                                      description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                      enum:
+                                      - PUBLIC
+                                      - PRIVATE
+                                      - SUBSCRIBERS
+                              catalogApi:
+                                type: string
+                              planId:
+                                type: string
+                                readOnly: true
+                              planDocLevel:
+                                type: string
+                                description: Documentation level of the documentation.
+                                enum:
+                                - PLAN
+                                - API
+                                - CUSTOM
+                                readOnly: true
+                              apiIntegrationId:
+                                type: string
+                                description: Reference to the API if the documentation is bound to an API object.
+                                readOnly: true
+                              custom:
+                                type: boolean
+                        customDocumentations:
+                          type: array
+                          items:
+                            description: The documentation version for a plan.
+                            properties:
+                              id:
+                                type: string
+                              order:
+                                type: integer
+                                format: int32
+                                description: The order of the documentation in the list of documentation for the plan.
+                              version:
+                                type: string
+                                description: The version of the documentation.
+                              status:
+                                type: array
+                                description: The status of the documentation.
+                                items:
+                                  type: string
+                                  description: The status of the documentation.
+                              active:
+                                type: boolean
+                                description: Flag to indicate if the documentation is active.
+                              visible:
+                                type: boolean
+                                description: The visibility of the documentation.
+                              retrievalType:
+                                type: string
+                                description: The retrieval type of the documentation.
+                                enum:
+                                - MANUAL
+                                - GATEWAY
+                                - CICD
+                                - CATALOG
+                              url:
+                                type: string
+                                description: The URL of the documentation.
+                              name:
+                                type: string
+                                description: The name of the documentation.
+                              synced:
+                                type: string
+                                format: date-time
+                                description: Timestamp of the last time the documentation was synchronized.
+                              sdks:
+                                type: array
+                                description: List of SDKs associated with this documentation version.
+                                items:
+                                  description: SDK information for a documentation version.
+                                  properties:
+                                    language:
+                                      type: string
+                                      description: The programming language of the SDK.
+                                    downloadUrl:
+                                      type: string
+                                      description: The download URL of the SDK.
+                                    visibility:
+                                      type: string
+                                      description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                      enum:
+                                      - PUBLIC
+                                      - PRIVATE
+                                      - SUBSCRIBERS
+                              catalogApi:
+                                type: string
+                              planId:
+                                type: string
+                                readOnly: true
+                              planDocLevel:
+                                type: string
+                                description: Documentation level of the documentation.
+                                enum:
+                                - PLAN
+                                - API
+                                - CUSTOM
+                                readOnly: true
+                              apiIntegrationId:
+                                type: string
+                                description: Reference to the API if the documentation is bound to an API object.
+                                readOnly: true
+                              custom:
+                                type: boolean
+                        deprecation:
+                          type: string
+                          format: date-time
+                        duration:
+                          type: integer
+                          format: int32
+                          description: The duration of the plan in days.
+                        enableUsageEvents:
+                          type: boolean
+                          description: Flag to enable usage events for the plan.
+                        features:
+                          type: array
+                          description: List of feature references for the plan.
+                          items:
+                            description: Reference to a feature identifier with value for this plan.
+                            properties:
+                              ref:
+                                description: Unique identifier to an object
+                                properties:
+                                  id:
+                                    type: string
+                              value:
+                                type: string
+                        gateway:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        integrationId:
+                          type: string
+                          description: Integration ID of the plan in the gateway. Used to identify the plan in the gateway. For example, with Amazon API Gateway, this would be the Usage Plan ID.
+                        monetization:
+                          description: Monetization configuration for the plan. Used to define how the plan is billed.
+                          properties:
+                            billProcessing:
+                              type: string
+                              enum:
+                              - API_CALL
+                              - TOKEN
+                              - APIABLE_CREDIT
+                              - CUSTOM
+                            unitLabel:
+                              type: string
+                            cycle:
+                              type: string
+                              enum:
+                              - MONTH
+                              - YEAR
+                              - MONTHLY
+                              - YEARLY
+                              - NONE
+                            revenueModel:
+                              type: string
+                              enum:
+                              - ONETIME
+                              - RECURRING
+                              - FLAT_FEE
+                              - GRADUATED
+                              - VOLUME
+                              - FREE
+                              - CONTRACT
+                              - FLAT_FEE_OVERAGE
+                              - PREPAID_BURN_DOWN
+                            prices:
+                              type: array
+                              items:
+                                description: The price for a plan in the monetization service.
+                                properties:
+                                  amount:
+                                    type: number
+                                    format: double
+                                  currency:
+                                    type: string
+                                  integrationId:
+                                    type: string
+                                  overageIntegrationId:
+                                    type: string
+                                  meterId:
+                                    type: string
+                                  active:
+                                    type: boolean
+                                  default:
+                                    type: boolean
+                                  tiers:
+                                    type: array
+                                    items:
+                                      description: The MonetizationVolumeTier schema is used to represent a volume tier in monetization plans.
+                                      properties:
+                                        min:
+                                          type: number
+                                          format: double
+                                        max:
+                                          type: number
+                                          format: double
+                                        perCall:
+                                          type: number
+                                          format: double
+                                        flatFee:
+                                          type: number
+                                          format: double
+                                  matchingCriteria:
+                                    type: array
+                                    items:
+                                      description: The criteria that should be matched
+                                      properties:
+                                        api:
+                                          type: string
+                                        criteria:
+                                          type: array
+                                          items:
+                                            description: The criteria object
+                                            discriminator:
+                                              propertyName: key
+                                            properties:
+                                              key:
+                                                type: string
+                                              id:
+                                                type: string
+                                  lookupKey:
+                                    type: string
+                                  includesTax:
+                                    type: boolean
+                                  labelOverrides:
+                                    description: The label overrides object.
+                                    properties:
+                                      leadingText:
+                                        type: string
+                                      mainText:
+                                        type: string
+                                      trailingText:
+                                        type: string
+                                      detailsTitle:
+                                        type: string
+                                      detailsText:
+                                        type: string
+                                      ctaOverrideText:
+                                        type: string
+                                      ctaOverrideUrl:
+                                        type: string
+                            defined:
+                              type: boolean
+                            meteringBaseUrl:
+                              type: string
+                        name:
+                          type: string
+                        numberOfAllowedSubscriptions:
+                          type: integer
+                          format: int32
+                          description: The number of allowed subscriptions allowed for the plan.
+                        order:
+                          type: integer
+                          format: int32
+                          description: The order of the plan in the list of plans for the product.
+                        product:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        securityLevel:
+                          type: string
+                          description: The security level authorization type of the plan.
+                          enum:
+                          - BASIC_API_KEY
+                          - INTERMEDIATE_JWT
+                          - INTERMEDIATE_CLIENT_CREDENTIAL
+                          - ADVANCED_CODE_FLOW
+                          - EVOLVED_CENTRALIZED_CLAIMS
+                        status:
+                          type: string
+                          description: The status of the plan
+                          enum:
+                          - INACTIVE
+                          - ACTIVE
+                          - ARCHIVED
+                          - DEPRECATED
+                          - DRAFT
+                        rateLimit:
+                          description: Rate-limiting configuration for the plan. Used to define how many requests can be made to the APIs included in a given time period.
+                          discriminator:
+                            propertyName: type
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - KONG
+                              - AMAZON
+                              - AMAZONEE
+                              - AZURE
+                              - APIGEE
+                        planVersion:
+                          type: string
+                          description: The user defined version of the plan.
+                        published:
+                          type: string
+                          format: date-time
+                        redirectUri:
+                          type: string
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example list of plans:
+                  description: List of all plans that exist on the portal.
+                  value:
+                    content:
+                    - id: 66f174095cc1da3963b9a1d7
+                      created: '2024-09-23T16:58:33.962'
+                      updated: '2024-09-23T16:59:11.984'
+                      name: Example Plan
+                      order: 2
+                      status: ACTIVE
+                      product:
+                        id: 66e803e91afc532cbde31cd1
+                      apis:
+                      - type: AMAZON
+                        name: Jokes (Cognito) - prod
+                        url: https://cl4z2nr4p8.execute-api.eu-central-1.amazonaws.com/prod
+                        integrationId: cl4z2nr4p8
+                        serviceIntegrationId: cl4z2nr4p8
+                        resources:
+                        - path: /programming
+                          method: GET
+                          integrationId: pb1jqo
+                        stage: prod
+                        environmentId: w7rc9s
+                        compatibleWithGatewayAuthz: true
+                      gateway:
+                        id: 63527499bad1d32643c4f875
+                      integrationId: inbwnw
+                      description: Acquire test data, easily, fast, and safely!
+                      monetization:
+                        unitLabel: call
+                        cycle: MONTH
+                        revenueModel: FLAT_FEE
+                        prices:
+                        - amount: 10
+                          currency: EUR
+                          integrationId: price_1Q2CnF4C6YYiB1TPwz8oA5wZ
+                          active: true
+                          default: false
+                          tiers:
+                          - min: 1
+                            max: 100
+                            perCall: 0
+                            flatFee: 2
+                          - min: 101
+                            max: -1
+                            perCall: 0
+                            flatFee: 1
+                          lookupKey: Example
+                          labelOverrides:
+                            leadingText: ''
+                            mainText: ''
+                            trailingText: ''
+                            detailsTitle: ''
+                            detailsText: ''
+                            ctaOverrideText: ''
+                            ctaOverrideUrl: ''
+                        defined: false
+                      rateLimit:
+                        type: AMAZON
+                        quoteLimit: 2147483647
+                        quotePeriod: MONTH
+                        throttleBurstLimit: 2147483647
+                        throttleRateLimit: 2147483647
+                      documentationLevel: PLAN
+                      documentationPublic: true
+                      documentations:
+                      - id: 66f172d43ee464553f9fe898
+                        order: 0
+                        version: '1.0'
+                        status: []
+                        active: true
+                        visible: true
+                        retrievalType: GATEWAY
+                        url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/icannotbelieveitisdocumentation.json
+                        name: Jokes (Cognito) - prod-202481-v-1.0.json
+                        synced: '2024-09-23T13:58:22.665'
+                      securityLevel: INTERMEDIATE_CLIENT_CREDENTIAL
+                      enableUsageEvents: false
+                      propertiesTabName: Properties
+                      customProperties: []
+                      version: 3
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: false
+                        unsorted: false
+                        sorted: true
+                      offset: 0
+                      paged: true
+                      unpaged: false
+                    last: true
+                    totalElements: 1
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: false
+                      unsorted: false
+                      sorted: true
+                    first: true
+                    numberOfElements: 1
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllPlans'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/{id}:
+    get:
+      tags:
+      - Plans
+      summary: Get the plan by the plan id
+      description: This endpoint will return the plan details if the user has the authority to view the plan
+      operationId: findPlanById_1
+      parameters:
+      - name: id
+        in: path
+        description: The id of the plan to be retrieved.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+          - '2023-01-01'
+      responses:
+        '200':
+          description: The details about the documentation on this plan
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - description: Details of a plan including documentation.
+                  properties:
+                    id:
+                      type: string
+                    documentationLevel:
+                      type: string
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                    documentationPublic:
+                      type: boolean
+                    planLevelDocs:
+                      type: array
+                      items:
+                        description: The documentation version for a plan.
+                        properties:
+                          id:
+                            type: string
+                          order:
+                            type: integer
+                            format: int32
+                            description: The order of the documentation in the list of documentation for the plan.
+                          version:
+                            type: string
+                            description: The version of the documentation.
+                          status:
+                            type: array
+                            description: The status of the documentation.
+                            items:
+                              type: string
+                              description: The status of the documentation.
+                          active:
+                            type: boolean
+                            description: Flag to indicate if the documentation is active.
+                          visible:
+                            type: boolean
+                            description: The visibility of the documentation.
+                          retrievalType:
+                            type: string
+                            description: The retrieval type of the documentation.
+                            enum:
+                            - MANUAL
+                            - GATEWAY
+                            - CICD
+                            - CATALOG
+                          url:
+                            type: string
+                            description: The URL of the documentation.
+                          name:
+                            type: string
+                            description: The name of the documentation.
+                          synced:
+                            type: string
+                            format: date-time
+                            description: Timestamp of the last time the documentation was synchronized.
+                          sdks:
+                            type: array
+                            description: List of SDKs associated with this documentation version.
+                            items:
+                              description: SDK information for a documentation version.
+                              properties:
+                                language:
+                                  type: string
+                                  description: The programming language of the SDK.
+                                downloadUrl:
+                                  type: string
+                                  description: The download URL of the SDK.
+                                visibility:
+                                  type: string
+                                  description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                  enum:
+                                  - PUBLIC
+                                  - PRIVATE
+                                  - SUBSCRIBERS
+                          catalogApi:
+                            type: string
+                          planId:
+                            type: string
+                            readOnly: true
+                          planDocLevel:
+                            type: string
+                            description: Documentation level of the documentation.
+                            enum:
+                            - PLAN
+                            - API
+                            - CUSTOM
+                            readOnly: true
+                          apiIntegrationId:
+                            type: string
+                            description: Reference to the API if the documentation is bound to an API object.
+                            readOnly: true
+                          custom:
+                            type: boolean
+                    apiLevelDocs:
+                      type: array
+                      items:
+                        description: The documentation version for a plan.
+                        properties:
+                          id:
+                            type: string
+                          order:
+                            type: integer
+                            format: int32
+                            description: The order of the documentation in the list of documentation for the plan.
+                          version:
+                            type: string
+                            description: The version of the documentation.
+                          status:
+                            type: array
+                            description: The status of the documentation.
+                            items:
+                              type: string
+                              description: The status of the documentation.
+                          active:
+                            type: boolean
+                            description: Flag to indicate if the documentation is active.
+                          visible:
+                            type: boolean
+                            description: The visibility of the documentation.
+                          retrievalType:
+                            type: string
+                            description: The retrieval type of the documentation.
+                            enum:
+                            - MANUAL
+                            - GATEWAY
+                            - CICD
+                            - CATALOG
+                          url:
+                            type: string
+                            description: The URL of the documentation.
+                          name:
+                            type: string
+                            description: The name of the documentation.
+                          synced:
+                            type: string
+                            format: date-time
+                            description: Timestamp of the last time the documentation was synchronized.
+                          sdks:
+                            type: array
+                            description: List of SDKs associated with this documentation version.
+                            items:
+                              description: SDK information for a documentation version.
+                              properties:
+                                language:
+                                  type: string
+                                  description: The programming language of the SDK.
+                                downloadUrl:
+                                  type: string
+                                  description: The download URL of the SDK.
+                                visibility:
+                                  type: string
+                                  description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                  enum:
+                                  - PUBLIC
+                                  - PRIVATE
+                                  - SUBSCRIBERS
+                          catalogApi:
+                            type: string
+                          planId:
+                            type: string
+                            readOnly: true
+                          planDocLevel:
+                            type: string
+                            description: Documentation level of the documentation.
+                            enum:
+                            - PLAN
+                            - API
+                            - CUSTOM
+                            readOnly: true
+                          apiIntegrationId:
+                            type: string
+                            description: Reference to the API if the documentation is bound to an API object.
+                            readOnly: true
+                          custom:
+                            type: boolean
+                - description: Plan object. A plan is a set of APIs and properties that can be subscribed to by users.
+                  properties:
+                    version:
+                      type: integer
+                      format: int32
+                    created:
+                      type: string
+                      format: date-time
+                    updated:
+                      type: string
+                      format: date-time
+                    id:
+                      type: string
+                    ancestorPlanId:
+                      type: string
+                    approvalGroupIdRef:
+                      type: string
+                      description: The approval group ID reference for the plan.
+                    apis:
+                      type: array
+                      description: List of APIs included in the plan.
+                      items:
+                        description: API item
+                        discriminator:
+                          propertyName: type
+                        properties:
+                          name:
+                            type: string
+                          resources:
+                            type: array
+                            items:
+                              description: The Resource schema is used to represent a resource in the API gateway. It includes details such as the path, method, and the integration ID.
+                              properties:
+                                path:
+                                  type: string
+                                method:
+                                  type: string
+                                integrationId:
+                                  type: string
+                          type:
+                            type: string
+                            enum:
+                            - KONG
+                            - AMAZON
+                            - AMAZONEE
+                            - AZURE
+                            - APIGEE
+                          url:
+                            type: string
+                          integrationId:
+                            type: string
+                          documentations:
+                            type: array
+                            items:
+                              description: The documentation version for a plan.
+                              properties:
+                                id:
+                                  type: string
+                                order:
+                                  type: integer
+                                  format: int32
+                                  description: The order of the documentation in the list of documentation for the plan.
+                                version:
+                                  type: string
+                                  description: The version of the documentation.
+                                status:
+                                  type: array
+                                  description: The status of the documentation.
+                                  items:
+                                    type: string
+                                    description: The status of the documentation.
+                                active:
+                                  type: boolean
+                                  description: Flag to indicate if the documentation is active.
+                                visible:
+                                  type: boolean
+                                  description: The visibility of the documentation.
+                                retrievalType:
+                                  type: string
+                                  description: The retrieval type of the documentation.
+                                  enum:
+                                  - MANUAL
+                                  - GATEWAY
+                                  - CICD
+                                  - CATALOG
+                                url:
+                                  type: string
+                                  description: The URL of the documentation.
+                                name:
+                                  type: string
+                                  description: The name of the documentation.
+                                synced:
+                                  type: string
+                                  format: date-time
+                                  description: Timestamp of the last time the documentation was synchronized.
+                                sdks:
+                                  type: array
+                                  description: List of SDKs associated with this documentation version.
+                                  items:
+                                    description: SDK information for a documentation version.
+                                    properties:
+                                      language:
+                                        type: string
+                                        description: The programming language of the SDK.
+                                      downloadUrl:
+                                        type: string
+                                        description: The download URL of the SDK.
+                                      visibility:
+                                        type: string
+                                        description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                        enum:
+                                        - PUBLIC
+                                        - PRIVATE
+                                        - SUBSCRIBERS
+                                catalogApi:
+                                  type: string
+                                planId:
+                                  type: string
+                                  readOnly: true
+                                planDocLevel:
+                                  type: string
+                                  description: Documentation level of the documentation.
+                                  enum:
+                                  - PLAN
+                                  - API
+                                  - CUSTOM
+                                  readOnly: true
+                                apiIntegrationId:
+                                  type: string
+                                  description: Reference to the API if the documentation is bound to an API object.
+                                  readOnly: true
+                                custom:
+                                  type: boolean
+                          serviceIntegrationId:
+                            type: string
+                    propertiesDescription:
+                      type: string
+                      description: The description of the properties of the plan.
+                    propertiesTabName:
+                      type: string
+                      description: The name of the tab to display the properties of the plan.
+                    customProperties:
+                      type: array
+                      description: List of available custom properties of the plan.
+                      items:
+                        description: Custom Property
+                        discriminator:
+                          propertyName: type
+                        properties:
+                          readOnly:
+                            type: boolean
+                            description: Whether the custom property is read only
+                          id:
+                            type: string
+                          type:
+                            type: string
+                            description: The type of the custom property
+                            enum:
+                            - STRING
+                            - NUMBER
+                            - BOOLEAN
+                            - TEXT
+                            - OPTIONS
+                            - MULTI_OPTIONS
+                          description:
+                            type: string
+                            description: The description of the custom property
+                          includeInSubscriptionWizard:
+                            type: boolean
+                            description: Whether the custom property is included in the subscription wizard
+                          required:
+                            type: boolean
+                            description: Whether the custom property is required
+                          display:
+                            type: string
+                            description: The display name of the custom property
+                    description:
+                      type: string
+                      description: A brief, optional description of the plan to present to end user to help them select the correct plan.
+                    documentationLevel:
+                      type: string
+                      description: The documentation level of the plan. Used to decide what level of documentation should be displayed on the portal.
+                      enum:
+                      - PLAN
+                      - API
+                      - CUSTOM
+                    documentationPublic:
+                      type: boolean
+                      description: Whether the documentation is public or not.
+                    documentations:
+                      type: array
+                      description: List of documentation versions for the plan.
+                      items:
+                        description: The documentation version for a plan.
+                        properties:
+                          id:
+                            type: string
+                          order:
+                            type: integer
+                            format: int32
+                            description: The order of the documentation in the list of documentation for the plan.
+                          version:
+                            type: string
+                            description: The version of the documentation.
+                          status:
+                            type: array
+                            description: The status of the documentation.
+                            items:
+                              type: string
+                              description: The status of the documentation.
+                          active:
+                            type: boolean
+                            description: Flag to indicate if the documentation is active.
+                          visible:
+                            type: boolean
+                            description: The visibility of the documentation.
+                          retrievalType:
+                            type: string
+                            description: The retrieval type of the documentation.
+                            enum:
+                            - MANUAL
+                            - GATEWAY
+                            - CICD
+                            - CATALOG
+                          url:
+                            type: string
+                            description: The URL of the documentation.
+                          name:
+                            type: string
+                            description: The name of the documentation.
+                          synced:
+                            type: string
+                            format: date-time
+                            description: Timestamp of the last time the documentation was synchronized.
+                          sdks:
+                            type: array
+                            description: List of SDKs associated with this documentation version.
+                            items:
+                              description: SDK information for a documentation version.
+                              properties:
+                                language:
+                                  type: string
+                                  description: The programming language of the SDK.
+                                downloadUrl:
+                                  type: string
+                                  description: The download URL of the SDK.
+                                visibility:
+                                  type: string
+                                  description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                  enum:
+                                  - PUBLIC
+                                  - PRIVATE
+                                  - SUBSCRIBERS
+                          catalogApi:
+                            type: string
+                          planId:
+                            type: string
+                            readOnly: true
+                          planDocLevel:
+                            type: string
+                            description: Documentation level of the documentation.
+                            enum:
+                            - PLAN
+                            - API
+                            - CUSTOM
+                            readOnly: true
+                          apiIntegrationId:
+                            type: string
+                            description: Reference to the API if the documentation is bound to an API object.
+                            readOnly: true
+                          custom:
+                            type: boolean
+                    customDocumentations:
+                      type: array
+                      items:
+                        description: The documentation version for a plan.
+                        properties:
+                          id:
+                            type: string
+                          order:
+                            type: integer
+                            format: int32
+                            description: The order of the documentation in the list of documentation for the plan.
+                          version:
+                            type: string
+                            description: The version of the documentation.
+                          status:
+                            type: array
+                            description: The status of the documentation.
+                            items:
+                              type: string
+                              description: The status of the documentation.
+                          active:
+                            type: boolean
+                            description: Flag to indicate if the documentation is active.
+                          visible:
+                            type: boolean
+                            description: The visibility of the documentation.
+                          retrievalType:
+                            type: string
+                            description: The retrieval type of the documentation.
+                            enum:
+                            - MANUAL
+                            - GATEWAY
+                            - CICD
+                            - CATALOG
+                          url:
+                            type: string
+                            description: The URL of the documentation.
+                          name:
+                            type: string
+                            description: The name of the documentation.
+                          synced:
+                            type: string
+                            format: date-time
+                            description: Timestamp of the last time the documentation was synchronized.
+                          sdks:
+                            type: array
+                            description: List of SDKs associated with this documentation version.
+                            items:
+                              description: SDK information for a documentation version.
+                              properties:
+                                language:
+                                  type: string
+                                  description: The programming language of the SDK.
+                                downloadUrl:
+                                  type: string
+                                  description: The download URL of the SDK.
+                                visibility:
+                                  type: string
+                                  description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                  enum:
+                                  - PUBLIC
+                                  - PRIVATE
+                                  - SUBSCRIBERS
+                          catalogApi:
+                            type: string
+                          planId:
+                            type: string
+                            readOnly: true
+                          planDocLevel:
+                            type: string
+                            description: Documentation level of the documentation.
+                            enum:
+                            - PLAN
+                            - API
+                            - CUSTOM
+                            readOnly: true
+                          apiIntegrationId:
+                            type: string
+                            description: Reference to the API if the documentation is bound to an API object.
+                            readOnly: true
+                          custom:
+                            type: boolean
+                    deprecation:
+                      type: string
+                      format: date-time
+                    duration:
+                      type: integer
+                      format: int32
+                      description: The duration of the plan in days.
+                    enableUsageEvents:
+                      type: boolean
+                      description: Flag to enable usage events for the plan.
+                    features:
+                      type: array
+                      description: List of feature references for the plan.
+                      items:
+                        description: Reference to a feature identifier with value for this plan.
+                        properties:
+                          ref:
+                            description: Unique identifier to an object
+                            properties:
+                              id:
+                                type: string
+                          value:
+                            type: string
+                    gateway:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                    integrationId:
+                      type: string
+                      description: Integration ID of the plan in the gateway. Used to identify the plan in the gateway. For example, with Amazon API Gateway, this would be the Usage Plan ID.
+                    monetization:
+                      description: Monetization configuration for the plan. Used to define how the plan is billed.
+                      properties:
+                        billProcessing:
+                          type: string
+                          enum:
+                          - API_CALL
+                          - TOKEN
+                          - APIABLE_CREDIT
+                          - CUSTOM
+                        unitLabel:
+                          type: string
+                        cycle:
+                          type: string
+                          enum:
+                          - MONTH
+                          - YEAR
+                          - MONTHLY
+                          - YEARLY
+                          - NONE
+                        revenueModel:
+                          type: string
+                          enum:
+                          - ONETIME
+                          - RECURRING
+                          - FLAT_FEE
+                          - GRADUATED
+                          - VOLUME
+                          - FREE
+                          - CONTRACT
+                          - FLAT_FEE_OVERAGE
+                          - PREPAID_BURN_DOWN
+                        prices:
+                          type: array
+                          items:
+                            description: The price for a plan in the monetization service.
+                            properties:
+                              amount:
+                                type: number
+                                format: double
+                              currency:
+                                type: string
+                              integrationId:
+                                type: string
+                              overageIntegrationId:
+                                type: string
+                              meterId:
+                                type: string
+                              active:
+                                type: boolean
+                              default:
+                                type: boolean
+                              tiers:
+                                type: array
+                                items:
+                                  description: The MonetizationVolumeTier schema is used to represent a volume tier in monetization plans.
+                                  properties:
+                                    min:
+                                      type: number
+                                      format: double
+                                    max:
+                                      type: number
+                                      format: double
+                                    perCall:
+                                      type: number
+                                      format: double
+                                    flatFee:
+                                      type: number
+                                      format: double
+                              matchingCriteria:
+                                type: array
+                                items:
+                                  description: The criteria that should be matched
+                                  properties:
+                                    api:
+                                      type: string
+                                    criteria:
+                                      type: array
+                                      items:
+                                        description: The criteria object
+                                        discriminator:
+                                          propertyName: key
+                                        properties:
+                                          key:
+                                            type: string
+                                          id:
+                                            type: string
+                              lookupKey:
+                                type: string
+                              includesTax:
+                                type: boolean
+                              labelOverrides:
+                                description: The label overrides object.
+                                properties:
+                                  leadingText:
+                                    type: string
+                                  mainText:
+                                    type: string
+                                  trailingText:
+                                    type: string
+                                  detailsTitle:
+                                    type: string
+                                  detailsText:
+                                    type: string
+                                  ctaOverrideText:
+                                    type: string
+                                  ctaOverrideUrl:
+                                    type: string
+                        defined:
+                          type: boolean
+                        meteringBaseUrl:
+                          type: string
+                    name:
+                      type: string
+                    numberOfAllowedSubscriptions:
+                      type: integer
+                      format: int32
+                      description: The number of allowed subscriptions allowed for the plan.
+                    order:
+                      type: integer
+                      format: int32
+                      description: The order of the plan in the list of plans for the product.
+                    product:
+                      description: Unique identifier to an object
+                      properties:
+                        id:
+                          type: string
+                    securityLevel:
+                      type: string
+                      description: The security level authorization type of the plan.
+                      enum:
+                      - BASIC_API_KEY
+                      - INTERMEDIATE_JWT
+                      - INTERMEDIATE_CLIENT_CREDENTIAL
+                      - ADVANCED_CODE_FLOW
+                      - EVOLVED_CENTRALIZED_CLAIMS
+                    status:
+                      type: string
+                      description: The status of the plan
+                      enum:
+                      - INACTIVE
+                      - ACTIVE
+                      - ARCHIVED
+                      - DEPRECATED
+                      - DRAFT
+                    rateLimit:
+                      description: Rate-limiting configuration for the plan. Used to define how many requests can be made to the APIs included in a given time period.
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - KONG
+                          - AMAZON
+                          - AMAZONEE
+                          - AZURE
+                          - APIGEE
+                    planVersion:
+                      type: string
+                      description: The user defined version of the plan.
+                    published:
+                      type: string
+                      format: date-time
+                    redirectUri:
+                      type: string
+              examples:
+                Example plan:
+                  description: Plan object with all its details.
+                  value:
+                    id: 66f174095cc1da3963b9a1d7
+                    created: '2024-09-23T16:58:33.962'
+                    updated: '2024-09-23T16:59:11.984'
+                    name: Example Plan
+                    order: 2
+                    status: ACTIVE
+                    product:
+                      id: 66e803e91afc532cbde31cd1
+                    apis:
+                    - type: AMAZON
+                      name: Jokes (Cognito) - prod
+                      url: https://cl4z2nr4p8.execute-api.eu-central-1.amazonaws.com/prod
+                      integrationId: cl4z2nr4p8
+                      serviceIntegrationId: cl4z2nr4p8
+                      resources:
+                      - path: /programming
+                        method: GET
+                        integrationId: pb1jqo
+                      stage: prod
+                      environmentId: w7rc9s
+                      compatibleWithGatewayAuthz: true
+                    gateway:
+                      id: 63527499bad1d32643c4f875
+                    integrationId: inbwnw
+                    description: Acquire test data, easily, fast, and safely!
+                    monetization:
+                      unitLabel: call
+                      cycle: MONTH
+                      revenueModel: FLAT_FEE
+                      prices:
+                      - amount: 10
+                        currency: EUR
+                        integrationId: price_1Q2CnF4C6YYiB1TPwz8oA5wZ
+                        active: true
+                        default: false
+                        tiers:
+                        - min: 1
+                          max: 100
+                          perCall: 0
+                          flatFee: 2
+                        - min: 101
+                          max: -1
+                          perCall: 0
+                          flatFee: 1
+                        lookupKey: Example
+                        labelOverrides:
+                          leadingText: ''
+                          mainText: ''
+                          trailingText: ''
+                          detailsTitle: ''
+                          detailsText: ''
+                          ctaOverrideText: ''
+                          ctaOverrideUrl: ''
+                      defined: false
+                    rateLimit:
+                      type: AMAZON
+                      quoteLimit: 2147483647
+                      quotePeriod: MONTH
+                      throttleBurstLimit: 2147483647
+                      throttleRateLimit: 2147483647
+                    documentationLevel: PLAN
+                    documentationPublic: true
+                    documentations:
+                    - id: 66f172d43ee464553f9fe898
+                      order: 0
+                      version: '1.0'
+                      status: []
+                      active: true
+                      visible: true
+                      retrievalType: GATEWAY
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/icannotbelieveitisdocumentation.json
+                      name: Jokes (Cognito) - prod-202481-v-1.0.json
+                      synced: '2024-09-23T13:58:22.665'
+                    securityLevel: INTERMEDIATE_CLIENT_CREDENTIAL
+                    enableUsageEvents: false
+                    propertiesTabName: Properties
+                    customProperties: []
+                    version: 3
+        '401':
+          description: 'Unauthorized: The user is not authorized to access this plan.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Unauthorized:
+                  description: Error message when the user is not authorized to access the plan.
+                  value: Unauthorized
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+  /api/plans/{id}/docs/overview:
+    get:
+      tags:
+      - Plans
+      summary: Get the plan documentation by the plan id
+      description: Retrieve the documentation associated with a specific plan by its ID. This endpoint returns the documentation versions that are linked to the plan, including their details.
+      operationId: findDocumentationByPlanId
+      parameters:
+      - name: id
+        in: path
+        description: The id of the plan to retrieve documentation for.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the documentation for the plan.'
+          content:
+            application/json:
+              schema:
+                description: Details of a plan including documentation.
+                properties:
+                  id:
+                    type: string
+                  documentationLevel:
+                    type: string
+                    enum:
+                    - PLAN
+                    - API
+                    - CUSTOM
+                  documentationPublic:
+                    type: boolean
+                  planLevelDocs:
+                    type: array
+                    items:
+                      description: The documentation version for a plan.
+                      properties:
+                        id:
+                          type: string
+                        order:
+                          type: integer
+                          format: int32
+                          description: The order of the documentation in the list of documentation for the plan.
+                        version:
+                          type: string
+                          description: The version of the documentation.
+                        status:
+                          type: array
+                          description: The status of the documentation.
+                          items:
+                            type: string
+                            description: The status of the documentation.
+                        active:
+                          type: boolean
+                          description: Flag to indicate if the documentation is active.
+                        visible:
+                          type: boolean
+                          description: The visibility of the documentation.
+                        retrievalType:
+                          type: string
+                          description: The retrieval type of the documentation.
+                          enum:
+                          - MANUAL
+                          - GATEWAY
+                          - CICD
+                          - CATALOG
+                        url:
+                          type: string
+                          description: The URL of the documentation.
+                        name:
+                          type: string
+                          description: The name of the documentation.
+                        synced:
+                          type: string
+                          format: date-time
+                          description: Timestamp of the last time the documentation was synchronized.
+                        sdks:
+                          type: array
+                          description: List of SDKs associated with this documentation version.
+                          items:
+                            description: SDK information for a documentation version.
+                            properties:
+                              language:
+                                type: string
+                                description: The programming language of the SDK.
+                              downloadUrl:
+                                type: string
+                                description: The download URL of the SDK.
+                              visibility:
+                                type: string
+                                description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                enum:
+                                - PUBLIC
+                                - PRIVATE
+                                - SUBSCRIBERS
+                        catalogApi:
+                          type: string
+                        planId:
+                          type: string
+                          readOnly: true
+                        planDocLevel:
+                          type: string
+                          description: Documentation level of the documentation.
+                          enum:
+                          - PLAN
+                          - API
+                          - CUSTOM
+                          readOnly: true
+                        apiIntegrationId:
+                          type: string
+                          description: Reference to the API if the documentation is bound to an API object.
+                          readOnly: true
+                        custom:
+                          type: boolean
+                  apiLevelDocs:
+                    type: array
+                    items:
+                      description: The documentation version for a plan.
+                      properties:
+                        id:
+                          type: string
+                        order:
+                          type: integer
+                          format: int32
+                          description: The order of the documentation in the list of documentation for the plan.
+                        version:
+                          type: string
+                          description: The version of the documentation.
+                        status:
+                          type: array
+                          description: The status of the documentation.
+                          items:
+                            type: string
+                            description: The status of the documentation.
+                        active:
+                          type: boolean
+                          description: Flag to indicate if the documentation is active.
+                        visible:
+                          type: boolean
+                          description: The visibility of the documentation.
+                        retrievalType:
+                          type: string
+                          description: The retrieval type of the documentation.
+                          enum:
+                          - MANUAL
+                          - GATEWAY
+                          - CICD
+                          - CATALOG
+                        url:
+                          type: string
+                          description: The URL of the documentation.
+                        name:
+                          type: string
+                          description: The name of the documentation.
+                        synced:
+                          type: string
+                          format: date-time
+                          description: Timestamp of the last time the documentation was synchronized.
+                        sdks:
+                          type: array
+                          description: List of SDKs associated with this documentation version.
+                          items:
+                            description: SDK information for a documentation version.
+                            properties:
+                              language:
+                                type: string
+                                description: The programming language of the SDK.
+                              downloadUrl:
+                                type: string
+                                description: The download URL of the SDK.
+                              visibility:
+                                type: string
+                                description: The visibility of the SDK (PUBLIC, PRIVATE, SUBSCRIBERS).
+                                enum:
+                                - PUBLIC
+                                - PRIVATE
+                                - SUBSCRIBERS
+                        catalogApi:
+                          type: string
+                        planId:
+                          type: string
+                          readOnly: true
+                        planDocLevel:
+                          type: string
+                          description: Documentation level of the documentation.
+                          enum:
+                          - PLAN
+                          - API
+                          - CUSTOM
+                          readOnly: true
+                        apiIntegrationId:
+                          type: string
+                          description: Reference to the API if the documentation is bound to an API object.
+                          readOnly: true
+                        custom:
+                          type: boolean
+              examples:
+                Example plan documentation:
+                  description: List of documentation versions associated with the specified plan.
+                  value:
+                    id: 66f174095cc1da3963b9a1d7
+                    documentationLevel: PLAN
+                    documentationPublic: true
+                    planLevelDocs:
+                    - id: 66f172d43ee464553f9fe898
+                      order: 0
+                      version: '1.0'
+                      status: []
+                      active: true
+                      visible: true
+                      retrievalType: GATEWAY
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/myfirstdocumentation.json
+                      name: Jokes (Cognito) - prod-202481-v-1.0.json
+                      synced: '2024-09-23T13:58:22.665'
+                    - id: 66f2a51f92b36f09825a4e30
+                      order: 1
+                      version: '1.0'
+                      status: []
+                      active: true
+                      visible: true
+                      retrievalType: GATEWAY
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/myseconddocumentation.json
+                      name: Jokes (Cognito) - prod-202481-v-1.0.json
+                    apiLevelDocs:
+                    - id: 66f3c2be7903d41208214a7d
+                      order: 0
+                      version: '2.0'
+                      status: []
+                      active: true
+                      visible: true
+                      retrievalType: GATEWAY
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/public/dev/mythirddocumentation.json
+                      name: Jokes (Cognito) - prod-202481-v-1.0.json
+                      planId: 66f174095cc1da3963b9a1d7
+                      planDocLevel: PLAN
+                      apiIntegrationId: cl4z2nr4p8
+        '401':
+          description: 'Unauthorized for operation: findDocumentationByPlanId'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested plan does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the plan with the given ID is not found.
+                  value: Plan not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+        - apiable/cicd
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

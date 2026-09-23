@@ -1,0 +1,713 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Webhooks API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Webhooks
+  description: '# How Webhooks Work
+
+
+    Webhooks are a way for services to communicate with each other in real time.'
+paths:
+  /api/webhooks/{id}:
+    get:
+      tags:
+      - Webhooks
+      summary: Retrieve a webhook by ID
+      description: Retrieve a specific webhook by its ID. This will return the webhook configuration including the events it is subscribed to, the URL, and the secret key.
+      operationId: getWebhookById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the webhook to retrieve.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 67040bcb1eb964694d999a68
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the webhook.'
+          content:
+            application/json:
+              schema:
+                description: The webhook configuration
+                properties:
+                  id:
+                    type: string
+                  events:
+                    type: array
+                    description: The events the webhook is listening to
+                    items:
+                      type: string
+                      description: The events the webhook is listening to
+                      enum:
+                      - SUBSCRIPTION_CREATED
+                      - SUBSCRIPTION_CANCELLED
+                      - SUBSCRIPTION_AUTH_CHANGED
+                      - SUBSCRIPTION_CHANGED
+                      - INVOICE_ATTENTION_REQUIRED
+                  url:
+                    type: string
+                    description: The url of the webhook
+                  whsec:
+                    type: string
+                    description: The secret of the webhook
+                  authorization:
+                    type: string
+                    description: The authorization header of the webhook
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: string
+                      description: The headers of the webhook
+                    description: The headers of the webhook
+              examples:
+                WebhookConf Example:
+                  description: Example of a webhook configuration.
+                  value:
+                    id: 66f6b0f0ea99a34963977e55
+                    created: '2024-09-27T16:19:44.013'
+                    updated: '2024-09-27T16:19:44.013'
+                    name: Webhook Example
+                    url: https://example.com/webhook
+                    authType: BASIC_AUTH
+                    authUsername: user
+                    authPassword: password
+                    events:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    whsec: whsec_1234567890abcdef
+                    active: true
+                    version: 1
+        '401':
+          description: 'Unauthorized for operation: getWebhookById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested webhook does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the webhook with the given ID is not found.
+                  value: Webhook not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+    put:
+      tags:
+      - Webhooks
+      summary: Update webhook
+      description: 'Update a webhook subscription by providing the URL to send the webhook to, the events to subscribe to.The webhook secret key (whsec) is optional. If not provided, a random key will be generated.
+
+        The possible event types `SUBSCRIPTION_CREATED` and `SUBSCRIPTION_CANCELLED` are sent when a subscription is created or cancelled, respectively.'
+      operationId: updateWebhook
+      parameters:
+      - name: id
+        in: path
+        description: The id of the webhook to be updated.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 67040bcb1eb964694d999a68
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: The expected request body for updating a webhook.
+        content:
+          application/json:
+            schema:
+              description: Webhook Configuration update request
+              properties:
+                events:
+                  type: array
+                  description: The events to subscribe to
+                  items:
+                    type: string
+                    description: The events to subscribe to
+                    enum:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    - SUBSCRIPTION_AUTH_CHANGED
+                    - SUBSCRIPTION_CHANGED
+                    - INVOICE_ATTENTION_REQUIRED
+                url:
+                  type: string
+                  description: The URL to send the webhook to
+                whsec:
+                  type: string
+                  description: The webhook secret key
+                authorization:
+                  type: string
+                  description: The authorization header
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: The headers to send with the webhook
+                  description: The headers to send with the webhook
+            examples:
+              WebhookConfUpdate:
+                description: WebhookConfUpdate
+                value: "\n{\n  \"url\": \"https://example.com/webhook\",\n  \"events\": [\n    \"SUBSCRIPTION_CREATED\",\n    \"SUBSCRIPTION_CANCELLED\"\n  ],\n  \"whsec\": \"whsec_1234567890abcdef\",\n}\n"
+        required: true
+      responses:
+        '200':
+          description: 'OK: Successfully updated the webhook.'
+          content:
+            application/json:
+              schema:
+                description: The webhook configuration
+                properties:
+                  id:
+                    type: string
+                  events:
+                    type: array
+                    description: The events the webhook is listening to
+                    items:
+                      type: string
+                      description: The events the webhook is listening to
+                      enum:
+                      - SUBSCRIPTION_CREATED
+                      - SUBSCRIPTION_CANCELLED
+                      - SUBSCRIPTION_AUTH_CHANGED
+                      - SUBSCRIPTION_CHANGED
+                      - INVOICE_ATTENTION_REQUIRED
+                  url:
+                    type: string
+                    description: The url of the webhook
+                  whsec:
+                    type: string
+                    description: The secret of the webhook
+                  authorization:
+                    type: string
+                    description: The authorization header of the webhook
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: string
+                      description: The headers of the webhook
+                    description: The headers of the webhook
+              examples:
+                WebhookConf Example:
+                  description: Example of an updated webhook configuration.
+                  value:
+                    id: 66f6b0f0ea99a34963977e55
+                    created: '2024-09-27T16:19:44.013'
+                    updated: '2024-09-27T16:19:44.013'
+                    name: Webhook Example
+                    url: https://example.com/webhook
+                    authType: BASIC_AUTH
+                    authUsername: user
+                    authPassword: password
+                    events:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    whsec: whsec_1234567890abcdef
+                    active: true
+                    version: 1
+        '401':
+          description: 'Unauthorized for operation: updateWebhook'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The webhook to be updated does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the webhook with the given ID is not found.
+                  value: Webhook not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+    delete:
+      tags:
+      - Webhooks
+      summary: Unregister a webhook
+      description: Unsubscribe from a webhook, record of the webhook will be deleted and deleted webhook will no longer receive events. Restoring a deleted webhook is not possible, instead you can create a new webhook with the same configuration.
+      operationId: unregisterWebhook
+      parameters:
+      - name: id
+        in: path
+        description: The id of the webhook to be unregistered.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 67040bcb1eb964694d999a68
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '204':
+          description: 'No Content: Successfully unregistered the webhook.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the webhook is successfully unregistered.
+                  value: Webhook unregistered successfully
+        '401':
+          description: 'Unauthorized for operation: unregisterWebhook'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The webhook to be unregistered doesn''t exit.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the webhook with the given ID is not found.
+                  value: Webhook not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/webhooks:
+    get:
+      tags:
+      - Webhooks
+      summary: Retrieve Registered Webhooks
+      description: Retrieve all registered webhooks for the platform. The response will include all webhooks that are currently registered.
+      operationId: findAllWebhooks
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of registered webhooks.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: The webhook configuration
+                  properties:
+                    id:
+                      type: string
+                    events:
+                      type: array
+                      description: The events the webhook is listening to
+                      items:
+                        type: string
+                        description: The events the webhook is listening to
+                        enum:
+                        - SUBSCRIPTION_CREATED
+                        - SUBSCRIPTION_CANCELLED
+                        - SUBSCRIPTION_AUTH_CHANGED
+                        - SUBSCRIPTION_CHANGED
+                        - INVOICE_ATTENTION_REQUIRED
+                    url:
+                      type: string
+                      description: The url of the webhook
+                    whsec:
+                      type: string
+                      description: The secret of the webhook
+                    authorization:
+                      type: string
+                      description: The authorization header of the webhook
+                    headers:
+                      type: object
+                      additionalProperties:
+                        type: string
+                        description: The headers of the webhook
+                      description: The headers of the webhook
+              examples:
+                Example list of webhooks:
+                  description: List of all registered webhooks on the platform.
+                  value:
+                  - id: 66f6b0f0ea99a34963977e55
+                    created: '2024-09-27T16:19:44.013'
+                    updated: '2024-09-27T16:19:44.013'
+                    name: Webhook Example
+                    url: https://example.com/webhook
+                    authType: BASIC_AUTH
+                    authUsername: user
+                    authPassword: password
+                    events:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    whsec: whsec_1234567890abcdef
+                    active: true
+                    version: 1
+        '401':
+          description: 'Unauthorized for operation: findAllWebhooks'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+    post:
+      tags:
+      - Webhooks
+      summary: Register a webhook
+      description: 'Subscribe to a webhook event by providing the URL to send the webhook to, the events to subscribe to.The webhook secret key (whsec) is optional. If not provided, a random key will be generated.
+
+        The possible event types `SUBSCRIPTION_CREATED` and `SUBSCRIPTION_CANCELLED` are sent when a subscription is created or cancelled, respectively.'
+      operationId: registerWebhook
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: The expected request body for registering a webhook.
+        content:
+          application/json:
+            schema:
+              description: Webhook Configuration create request
+              properties:
+                events:
+                  type: array
+                  description: The events to subscribe to
+                  items:
+                    type: string
+                    description: The events to subscribe to
+                    enum:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    - SUBSCRIPTION_AUTH_CHANGED
+                    - SUBSCRIPTION_CHANGED
+                    - INVOICE_ATTENTION_REQUIRED
+                url:
+                  type: string
+                  description: The URL to send the webhook to
+                whsec:
+                  type: string
+                  description: The webhook secret key
+                authorization:
+                  type: string
+                  description: The authorization header
+                headers:
+                  type: object
+                  additionalProperties:
+                    type: string
+                    description: The headers to send with the webhook
+                  description: The headers to send with the webhook
+            examples:
+              WebhookConf:
+                description: Example of a webhook configuration to be registered.
+                value: "\n                {\n                    \"events\": [\"SUBSCRIPTION_CREATED\",\"SUBSCRIPTION_CANCELLED\"],\n                    \"url\": \"https://example.com/webhook\",\n                    \"whsec\": \"base64 encoded, prefixed with `whsec_` (Random. Between 24 bytes (192 bits) and 64 bytes (512 bits))\",\n                    \"authorization\": \"key/token - something we pass to a Authorization header e.g. 'Authorization: _bn6hgjds'\",\n                }\n            "
+        required: true
+      responses:
+        '201':
+          description: 'Created: Successfully registered the webhook.'
+          content:
+            application/json:
+              schema:
+                description: The webhook configuration
+                properties:
+                  id:
+                    type: string
+                  events:
+                    type: array
+                    description: The events the webhook is listening to
+                    items:
+                      type: string
+                      description: The events the webhook is listening to
+                      enum:
+                      - SUBSCRIPTION_CREATED
+                      - SUBSCRIPTION_CANCELLED
+                      - SUBSCRIPTION_AUTH_CHANGED
+                      - SUBSCRIPTION_CHANGED
+                      - INVOICE_ATTENTION_REQUIRED
+                  url:
+                    type: string
+                    description: The url of the webhook
+                  whsec:
+                    type: string
+                    description: The secret of the webhook
+                  authorization:
+                    type: string
+                    description: The authorization header of the webhook
+                  headers:
+                    type: object
+                    additionalProperties:
+                      type: string
+                      description: The headers of the webhook
+                    description: The headers of the webhook
+              examples:
+                WebhookConf Example:
+                  description: Example of a registered webhook configuration.
+                  value:
+                    id: 66f6b0f0ea99a34963977e55
+                    created: '2024-09-27T16:19:44.013'
+                    updated: '2024-09-27T16:19:44.013'
+                    name: Webhook Example
+                    url: https://example.com/webhook
+                    authType: BASIC_AUTH
+                    authUsername: user
+                    authPassword: password
+                    events:
+                    - SUBSCRIPTION_CREATED
+                    - SUBSCRIPTION_CANCELLED
+                    whsec: whsec_1234567890abcdef
+                    active: true
+                    version: 1
+        '401':
+          description: 'Unauthorized for operation: registerWebhook'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/webhooks/{id}/test:
+    get:
+      tags:
+      - Webhooks
+      summary: Test a webhook by ID
+      description: Send a test event to a specific webhook by its ID. This will simulate the webhook sending a POST request to the URL configured for the webhook.The test event will be sent using the same schema as actual events, but with a different event type (TEST_EVENT).
+      operationId: testWebhookById
+      parameters:
+      - name: id
+        in: path
+        description: The id of the webhook to be tested.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 67040bcb1eb964694d999a68
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully sent the test event to the webhook.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Success:
+                  description: Confirmation message when the test event is successfully sent to the webhook.
+                  value: 'Test event sent to: https: with response.status: OK '
+        '401':
+          description: 'Unauthorized for operation: testWebhookById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The webhook to be tested does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the webhook with the given ID is not found.
+                  value: Webhook not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+  /api/webhooks/{id}/history:
+    get:
+      tags:
+      - Webhooks
+      summary: Retrieve the history of webhook results for the past 24 hours
+      description: Retrieve the history of webhook results for the past 24 hours. This includes all webhook events that were sent.
+      operationId: getWebhookHistory
+      parameters:
+      - name: id
+        in: path
+        description: The id of the webhook to retrieve the history for.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 67040bcb1eb964694d999a68
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the webhook history.'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Webhook History Example:
+                  description: List of webhook history entries for the specified webhook.
+                  value:
+                  - Webhook event with id 67993d1b70045616067c6629 sent successfully, with status 200 OK
+        '401':
+          description: 'Unauthorized for operation: getWebhookHistory'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The webhook does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the webhook with the given ID is not found.
+                  value: Webhook not found
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

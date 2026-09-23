@@ -1,0 +1,2518 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Subscriptions API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Subscriptions
+  description: Operations related to managing subscriptions, including retrieval, update, approval, rejection, and refreshing the status of connected monetization. For security reasons, API keys, secrets, and other sensitive information included in the subscriptions are not returned in the response.
+paths:
+  /api/subscriptions/{id}/custom-properties:
+    put:
+      tags:
+      - Subscriptions
+      summary: Read/Write subscription custom properties
+      description: Reads and writes custom properties of a subscription. Custom properties are key-value pairs that can be used to store additional information about the subscription. The custom properties are returned in the response when the subscription is retrieved. The custom properties can be updated by providing a list of custom properties in the request body.
+      operationId: updateCustomProperties
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateCustomProperties.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Custom Property
+                discriminator:
+                  propertyName: type
+                properties:
+                  readOnly:
+                    type: boolean
+                    description: Whether the custom property is read only
+                  id:
+                    type: string
+                  type:
+                    type: string
+                    description: The type of the custom property
+                    enum:
+                    - STRING
+                    - NUMBER
+                    - BOOLEAN
+                    - TEXT
+                    - OPTIONS
+                    - MULTI_OPTIONS
+                  description:
+                    type: string
+                    description: The description of the custom property
+                  includeInSubscriptionWizard:
+                    type: boolean
+                    description: Whether the custom property is included in the subscription wizard
+                  required:
+                    type: boolean
+                    description: Whether the custom property is required
+                  display:
+                    type: string
+                    description: The display name of the custom property
+            examples:
+              Example custom property:
+                description: Custom property object with key-value pair.
+                value:
+                  display: new display
+                  type: STRING
+                  description: string
+                  readOnly: true
+                  required: true
+                  includeInSubscriptionWizard: true
+                  value: new value2
+        required: true
+      responses:
+        '200':
+          description: 'OK: Subscription updated successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Updated subscription with all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '400':
+          description: 'Bad Request: Invalid update parameters or operation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the patch operation is not allowed for the subscription.
+                  value: Bad Request
+        '401':
+          description: 'Unauthorized for operation: updateCustomProperties'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription to update does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription to be updated is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions:
+    get:
+      tags:
+      - Subscriptions
+      summary: Retrieve all subscriptions
+      description: Fetches a paginated, sortable, and filterable list of all subscriptions accessible to the user. Each subscription includes details such as ID, name, status, and other relevant metadata, while omitting sensitive information like API keys and secrets.
+      operationId: findAllSubscriptions
+      parameters:
+      - name: page
+        in: query
+        description: Zero-based page index for pagination in the findAllSubscriptions request query parameters.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: Number of subscriptions to return per page in the findAllSubscriptions request query parameters.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: 'Sorting criteria in the format: property,asc|desc. Example: created,desc in the findAllSubscriptions request query parameters'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - created,desc
+      - name: search
+        in: query
+        description: 'Search filter in the format: property.op=value in the findAllSubscriptions request query parameters. Multiple criteria can be separated by semicolons. Example: status.in=PENDING;PENDING_PAYMENT'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - status.in=PENDING;PENDING_PAYMENT
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      - name: resolve
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the list of subscriptions.'
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated subscription results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Subscription object
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        name:
+                          type: string
+                          description: The name of the subscription
+                        status:
+                          type: string
+                          description: The status of the subscription
+                          enum:
+                          - PENDING_PAYMENT
+                          - PAYMENT_FAILED
+                          - PENDING
+                          - ACTIVE
+                          - REJECTED
+                          - CANCELLED
+                          - EXPIRED
+                          - PENDING_CANCELLATION
+                        approvalEmailSent:
+                          type: boolean
+                          description: Flag to indicate if an email has been sent to the approval group for this subscription
+                        plan:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        team:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        expires:
+                          type: string
+                          format: date-time
+                          description: The date the subscription will expire
+                        integrationId:
+                          type: string
+                          description: Integration ID of the subscription in the API Gateway
+                        auth:
+                          description: Authentication details for the subscription
+                          discriminator:
+                            propertyName: type
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - BASIC_API_KEY
+                              - INTERMEDIATE_JWT
+                              - INTERMEDIATE_CLIENT_CREDENTIAL
+                              - ADVANCED_CODE_FLOW
+                              - EVOLVED_CENTRALIZED_CLAIMS
+                            integrationId:
+                              type: string
+                        lastAuth:
+                          description: Authentication details for the subscription
+                          discriminator:
+                            propertyName: type
+                          properties:
+                            id:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                              - BASIC_API_KEY
+                              - INTERMEDIATE_JWT
+                              - INTERMEDIATE_CLIENT_CREDENTIAL
+                              - ADVANCED_CODE_FLOW
+                              - EVOLVED_CENTRALIZED_CLAIMS
+                            integrationId:
+                              type: string
+                        cancelled:
+                          type: string
+                          format: date-time
+                          description: The date the subscription was marked as cancelled
+                        checkoutSession:
+                          type: string
+                          description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                        stripeSubscriptionId:
+                          type: string
+                          description: Integration ID of the subscription in the Monetization service provider
+                        priceIds:
+                          type: array
+                          description: The monetization service price IDs of the subscription
+                          items:
+                            type: string
+                            description: The monetization service price IDs of the subscription
+                        usageMeter:
+                          type: string
+                          description: The monetization service usage meter ID of the subscription
+                        owner:
+                          description: Unique identifier to an object
+                          properties:
+                            id:
+                              type: string
+                        email:
+                          type: string
+                          description: The email of the subscription owner
+                        customProperties:
+                          type: array
+                          description: The custom properties of the subscription
+                          items:
+                            description: Custom Property
+                            discriminator:
+                              propertyName: type
+                            properties:
+                              readOnly:
+                                type: boolean
+                                description: Whether the custom property is read only
+                              id:
+                                type: string
+                              type:
+                                type: string
+                                description: The type of the custom property
+                                enum:
+                                - STRING
+                                - NUMBER
+                                - BOOLEAN
+                                - TEXT
+                                - OPTIONS
+                                - MULTI_OPTIONS
+                              description:
+                                type: string
+                                description: The description of the custom property
+                              includeInSubscriptionWizard:
+                                type: boolean
+                                description: Whether the custom property is included in the subscription wizard
+                              required:
+                                type: boolean
+                                description: Whether the custom property is required
+                              display:
+                                type: string
+                                description: The display name of the custom property
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example response:
+                  description: Example list of subscriptions matching the request.
+                  value:
+                    content:
+                    - id: 66f693e5c8ec2f3e25b2b854
+                      created: '2024-09-27T14:15:49.319'
+                      updated: '2024-09-27T14:45:08.03'
+                      name: '202409271415'
+                      status: ACTIVE
+                      approvalEmailSent: true
+                      plan:
+                        id: 66f174095cc1da3963b9a1d7
+                      team:
+                        id: 62691aa099a7d17e2cac7664
+                      integrationId: xxxxxxxxxx
+                      auth:
+                        type: INTERMEDIATE_CLIENT_CREDENTIAL
+                        id: _apbl_###
+                        integrationId: xxxxxxxxxx
+                        registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                        redirectUri: https://dev.apiable.io
+                        examples:
+                          curl: '###'
+                      checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                      stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                      priceIds:
+                      - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                      owner:
+                        id: 62691aa099a7d17e2cac7663
+                      customProperties:
+                      - id: 66f69ac4ccc00456987e3df8
+                        display: new display
+                        type: STRING
+                        description: string
+                        readOnly: true
+                        required: true
+                        includeInSubscriptionWizard: true
+                        value: new value2
+                      version: 5
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: false
+                        unsorted: false
+                        sorted: true
+                      offset: 0
+                      paged: true
+                      unpaged: false
+                    last: true
+                    totalElements: 1
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: false
+                      unsorted: false
+                      sorted: true
+                    first: true
+                    numberOfElements: 1
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllSubscriptions'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+    post:
+      tags:
+      - Subscriptions
+      summary: Create a new subscription
+      description: 'Creates a new subscription programmatically with the specified plan, team, and owner. The subscription status will depend on the plan configuration: PENDING if approval is required, PENDING_PAYMENT if payment is required, or ACTIVE otherwise.
+
+        For migration scenarios, you can optionally provide an authIntegrationId to link the subscription to an existing API key/credential in your gateway. However, please note: Automatic retrieval of authorization details will depend on the security level of the authorization schema, and may not be possible with stricter security settings. For example in cases where the client secret cannot be retrieved after being initially generated.'
+      operationId: createSubscription
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: createSubscription.'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                plan:
+                  description: Unique identifier to an object
+                  properties:
+                    id:
+                      type: string
+                team:
+                  description: Unique identifier to an object
+                  properties:
+                    id:
+                      type: string
+                owner:
+                  description: Unique identifier to an object
+                  properties:
+                    id:
+                      type: string
+                email:
+                  type: string
+                  description: Optional email of the subscription owner, used to link the subscrpition to a specific user before they register.
+                customProperties:
+                  type: array
+                  description: Custom properties with only id and value required
+                  items:
+                    description: Custom Property
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      readOnly:
+                        type: boolean
+                        description: Whether the custom property is read only
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        description: The type of the custom property
+                        enum:
+                        - STRING
+                        - NUMBER
+                        - BOOLEAN
+                        - TEXT
+                        - OPTIONS
+                        - MULTI_OPTIONS
+                      description:
+                        type: string
+                        description: The description of the custom property
+                      includeInSubscriptionWizard:
+                        type: boolean
+                        description: Whether the custom property is included in the subscription wizard
+                      required:
+                        type: boolean
+                        description: Whether the custom property is required
+                      display:
+                        type: string
+                        description: The display name of the custom property
+                authIntegrationId:
+                  type: string
+                  description: Optional auth integration ID if importing an existing subscription
+            examples:
+              Create subscription request:
+                description: Example request to create a new subscription with a custom property.
+                value: "\n                {\n                  \"name\": \"Programmatic subscription with custom properties\",\n                  \"plan\": \"68a4676693bf757a8141f824\",\n                  \"team\": \"62691aa099a7d17e2cac7664\",\n                  \"customProperties\": [\n                      {\n                        id: \"62691aa099a7d17e2cac7665\",\n                        value: \"custom property example value\",\n                      }\n                  ]\n                }\n                "
+              Create subscription with existing gateway auth:
+                description: 'Example request for migration scenarios where you want to link the subscription to an existing API key/credential in your gateway. The authIntegrationId should match the identifier of the existing credential in your gateway. Note: This is not supported when using Apiable Client Credentials, as secrets cannot be retrieved once generated.'
+                value:
+                  name: Migrated subscription with existing auth
+                  plan: 68a4676693bf757a8141f824
+                  team: 62691aa099a7d17e2cac7664
+                  email: user@example.com
+                  authIntegrationId: abc123-existing-api-key-id
+        required: true
+      responses:
+        '200':
+          description: 'OK: Subscription created successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Created subscription with status and all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '400':
+          description: 'Bad Request: Invalid input data.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Blank Field:
+                  description: Error when required field is provided but blank
+                  value:
+                    error: Bad Request
+                    message: Subscription name cannot be blank
+                Invalid Email:
+                  description: Error when email format is invalid
+                  value:
+                    error: Bad Request
+                    message: 'Invalid email format: not-an-email'
+                Owner or Email Required:
+                  description: Error when neither owner nor email is provided
+                  value:
+                    error: Bad Request
+                    message: Either owner or email must be provided
+                Plan Not Found:
+                  description: Error when the specified plan does not exist
+                  value:
+                    error: Bad Request
+                    message: Cannot create subscription, plan not found
+                Plan Limit Exceeded:
+                  description: Error when team has reached the subscription limit for the plan
+                  value:
+                    error: Bad Request
+                    message: Subscription cannot be created. The team has already reached the maximum number of subscriptions allowed for this plan.
+        '401':
+          description: 'Unauthorized for operation: createSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The team or plan specified does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error when the team or plan cannot be found
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions/{id}/reject:
+    post:
+      tags:
+      - Subscriptions
+      summary: Reject a subscription
+      description: Rejects a subscription that has approval workflow enabled. The subscription status is updated to REJECTED.
+      operationId: rejectSubscription
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Subscription rejected successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Rejected subscription with updated status and all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '400':
+          description: 'Bad Request: Subscription cannot be rejected in its current state.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the subscription cannot be rejected due to status mismatch or other requirements.
+                  value: Bad Request
+        '401':
+          description: 'Unauthorized for operation: rejectSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription to reject does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription to be rejected is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions/{id}/refresh-billing:
+    post:
+      tags:
+      - Subscriptions
+      summary: Refresh subscription billing status
+      description: Updates the subscription's billing status by querying the connected monetization platform.
+      operationId: refreshSubscriptionBillingStatus
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID in the refreshing subscription billing status request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Billing status refreshed successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Subscription with updated billing status and all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '401':
+          description: 'Unauthorized for operation: refreshSubscriptionBillingStatus'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription for billing refresh does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription for billing refresh is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions/{id}/approve:
+    post:
+      tags:
+      - Subscriptions
+      summary: Approve a subscription
+      description: Approves a subscription with approval workflow enabled. The subscription status changes to ACTIVE if no monetization is configured, or PENDING_PAYMENT if monetization is enabled.
+      operationId: approveSubscription
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID in approval subscription request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Subscription approved successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Approved subscription with updated status and all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '400':
+          description: 'Bad Request: Subscription cannot be approved in its current state.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Example response when subscription cannot be approved:
+                  description: Error message when the subscription cannot be approved due to status mismatch.
+                  value: Bad Request
+        '401':
+          description: 'Unauthorized for operation: approveSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription to approve does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription to be approved is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions/usage:
+    post:
+      tags:
+      - Subscriptions
+      summary: Meter usage for subscription billing
+      description: Meters usage for the subscription for billing purposes. To meter usage for subscription billing, include either the subscriptionId (the ID of the subscription on theportal) or the integrationId (the ID on the gateway), along with the quantity of usage in the request.
+      operationId: meterSubscriptionUsage
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: meterSubscriptionUsage.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                properties:
+                  subscriptionId:
+                    type: string
+                  integrationId:
+                    type: string
+                  quantity:
+                    type: integer
+                    format: int32
+                  timestamp:
+                    type: integer
+                    format: int64
+                    description: The timestamp for the usage event, in Unix seconds (UTC timezone). Defaults to current time if not provided.
+                  lookupkey:
+                    type: string
+                  action:
+                    type: string
+            examples:
+              Example subscription metering request using integration id:
+                description: Custom property object with key-value pair.
+                value:
+                  integrationId: lol4o90zl0a
+                  quantity: 1
+                  action: increment
+                  timestamp: 1750812600
+              Example subscription metering request using subscription id:
+                description: Custom property object with key-value pair.
+                value:
+                  subscriptionId: 685acdf14cca56585c6833c4
+                  quantity: 3
+                  action: increment
+        required: true
+      responses:
+        '200':
+          description: 'OK: Usage has been metered successfully'
+          content:
+            application/json:
+              schema:
+                properties:
+                  subscriptionId:
+                    type: string
+                  meterId:
+                    type: string
+                  periodStartTime:
+                    type: integer
+                    format: int64
+                  periodEndTime:
+                    type: integer
+                    format: int64
+                  items:
+                    type: array
+                    items:
+                      properties:
+                        aggregateSum:
+                          type: integer
+                          format: int32
+                        startTime:
+                          type: integer
+                          format: int64
+                        endTime:
+                          type: integer
+                          format: int64
+              examples:
+                Example response:
+                  description: Subscription usage metering response
+                  value: "\n{\n  \"responseTimestamp\": 1750812600,\n  \"usageReportId\": \"484177af-269e-4fe6-9ab6-7e24e2e2eee7\",\n  \"subscriptionId\": \"66f69ac4ccc00456987e3df8\",\n  \"integrationId\": \"abc12345\",\n  \"usageData\": {\n    \"quantity\": 1,\n    \"timestamp\": 1750812600,\n    \"lookupkey\": \"\",\n    \"action\": \"increment\"\n  },\n  \"usageRecords\": {object}\n}\n"
+        '401':
+          description: 'Unauthorized for operation: meterSubscriptionUsage'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription could not be found'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription could not be found
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/subscriptions/{id}:
+    get:
+      tags:
+      - Subscriptions
+      summary: Get subscription by ID
+      description: Fetches a specific subscription by its unique identifier. Returns the subscription details with all non-sensitive information.
+      operationId: findSubscriptionById
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID to be retrieved
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the subscription details.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Example subscription with all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '401':
+          description: 'Unauthorized for operation: findSubscriptionById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested subscription does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription with the given ID is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+    delete:
+      tags:
+      - Subscriptions
+      summary: Cancel and revoke a subscription
+      description: Cancels and revokes a subscription at the specified timestamp. This operation will cancel the subscription in the billing system and revoke API access. The cancellation will take effect at the timestamp provided in the cancelAt field.
+      operationId: cancelAndRevokeSubscription
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID to cancel and revoke
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: Request body containing the timestamp for when the subscription cancellation should take effect
+        content:
+          application/json:
+            schema:
+              properties:
+                cancelAt:
+                  type: integer
+                  format: int64
+                  description: The timestamp when the subscription should be cancelled, in Unix seconds (UTC timezone)
+            examples:
+              Cancel subscription request:
+                description: Example request to cancel and revoke a subscription. The cancelAt field is a Unix timestamp (epoch seconds UTC) indicating when the cancellation should take effect.
+                value:
+                  cancelAt: 1704067200
+        required: true
+      responses:
+        '200':
+          description: 'OK: Subscription canceled and revoked successfully.'
+          content:
+            application/json: {}
+        '400':
+          description: 'Bad Request: Subscription cannot be canceled in its current state or invalid cancelAt timestamp.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Invalid State:
+                  description: Error message when the subscription cannot be canceled due to its current state.
+                  value:
+                    timestamp: '2024-09-30T12:17:51.528+00:00'
+                    status: 400
+                    error: Bad Request
+                    message: Subscription cannot be canceled in its current state
+                    path: /api/subscriptions/6268ec80a098ed05f047f278
+        '401':
+          description: 'Unauthorized for operation: cancelAndRevokeSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription to cancel does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Subscription Not Found:
+                  description: Error message when the subscription to be canceled is not found.
+                  value:
+                    timestamp: '2024-09-30T10:45:55.018+00:00'
+                    status: 404
+                    error: Not Found
+                    message: Entity with id 6268ec80a098ed05f047f278 not found
+                    path: /api/subscriptions/6268ec80a098ed05f047f278
+      security:
+      - oauth-cc:
+        - apiable/platform
+    patch:
+      tags:
+      - Subscriptions
+      summary: Update a subscription
+      description: 'Updates a subscription with the provided fields using JSON patch operations. Allowed fields for modification: "name", "expires", "stripeSubscriptionId", "priceIds", "usageMeter", "owner", "email"'
+      operationId: updateSubscription
+      parameters:
+      - name: id
+        in: path
+        description: Subscription ID in updating subscription request
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: JSON Patch operations to be performed on the subscription.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for subscription
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Supported patch paths for Subscription
+                    enum:
+                    - /name
+                    - /expires
+                    - /stripeSubscriptionId
+                    - /priceIds
+                    - /usageMeter
+                    - /owner
+                    - /email
+                  value:
+                    type: string
+            examples:
+              Example patch operations:
+                description: Patch operation to update the subscription name.
+                value:
+                - op: replace
+                  path: /name
+                  value: new name
+        required: true
+      responses:
+        '200':
+          description: 'OK: Subscription updated successfully.'
+          content:
+            application/json:
+              schema:
+                description: Subscription object
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  name:
+                    type: string
+                    description: The name of the subscription
+                  status:
+                    type: string
+                    description: The status of the subscription
+                    enum:
+                    - PENDING_PAYMENT
+                    - PAYMENT_FAILED
+                    - PENDING
+                    - ACTIVE
+                    - REJECTED
+                    - CANCELLED
+                    - EXPIRED
+                    - PENDING_CANCELLATION
+                  approvalEmailSent:
+                    type: boolean
+                    description: Flag to indicate if an email has been sent to the approval group for this subscription
+                  plan:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  team:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  expires:
+                    type: string
+                    format: date-time
+                    description: The date the subscription will expire
+                  integrationId:
+                    type: string
+                    description: Integration ID of the subscription in the API Gateway
+                  auth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  lastAuth:
+                    description: Authentication details for the subscription
+                    discriminator:
+                      propertyName: type
+                    properties:
+                      id:
+                        type: string
+                      type:
+                        type: string
+                        enum:
+                        - BASIC_API_KEY
+                        - INTERMEDIATE_JWT
+                        - INTERMEDIATE_CLIENT_CREDENTIAL
+                        - ADVANCED_CODE_FLOW
+                        - EVOLVED_CENTRALIZED_CLAIMS
+                      integrationId:
+                        type: string
+                  cancelled:
+                    type: string
+                    format: date-time
+                    description: The date the subscription was marked as cancelled
+                  checkoutSession:
+                    type: string
+                    description: Checkout session ID for the subscription, only used when the subscription is created through the checkout
+                  stripeSubscriptionId:
+                    type: string
+                    description: Integration ID of the subscription in the Monetization service provider
+                  priceIds:
+                    type: array
+                    description: The monetization service price IDs of the subscription
+                    items:
+                      type: string
+                      description: The monetization service price IDs of the subscription
+                  usageMeter:
+                    type: string
+                    description: The monetization service usage meter ID of the subscription
+                  owner:
+                    description: Unique identifier to an object
+                    properties:
+                      id:
+                        type: string
+                  email:
+                    type: string
+                    description: The email of the subscription owner
+                  customProperties:
+                    type: array
+                    description: The custom properties of the subscription
+                    items:
+                      description: Custom Property
+                      discriminator:
+                        propertyName: type
+                      properties:
+                        readOnly:
+                          type: boolean
+                          description: Whether the custom property is read only
+                        id:
+                          type: string
+                        type:
+                          type: string
+                          description: The type of the custom property
+                          enum:
+                          - STRING
+                          - NUMBER
+                          - BOOLEAN
+                          - TEXT
+                          - OPTIONS
+                          - MULTI_OPTIONS
+                        description:
+                          type: string
+                          description: The description of the custom property
+                        includeInSubscriptionWizard:
+                          type: boolean
+                          description: Whether the custom property is included in the subscription wizard
+                        required:
+                          type: boolean
+                          description: Whether the custom property is required
+                        display:
+                          type: string
+                          description: The display name of the custom property
+              examples:
+                Example response:
+                  description: Updated subscription with all non-sensitive information.
+                  value:
+                    id: 66f693e5c8ec2f3e25b2b854
+                    created: '2024-09-27T14:15:49.319'
+                    updated: '2024-09-27T14:45:08.03'
+                    name: '202409271415'
+                    status: ACTIVE
+                    approvalEmailSent: true
+                    plan:
+                      id: 66f174095cc1da3963b9a1d7
+                    team:
+                      id: 62691aa099a7d17e2cac7664
+                    integrationId: xxxxxxxxxx
+                    auth:
+                      type: INTERMEDIATE_CLIENT_CREDENTIAL
+                      id: _apbl_###
+                      integrationId: xxxxxxxxxx
+                      registrationClientUri: https://dev.apiable.io/api/oauth2/oauth-token/_APBL_###
+                      redirectUri: https://dev.apiable.io
+                      examples:
+                        curl: '###'
+                    checkoutSession: cs_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    stripeSubscriptionId: sub_xxxxxxxxxxxxxxxxxxxxxxxx
+                    priceIds:
+                    - price_xxxxxxxxxxxxxxxxxxxxxxxx
+                    owner:
+                      id: 62691aa099a7d17e2cac7663
+                    customProperties:
+                    - id: 66f69ac4ccc00456987e3df8
+                      display: new display
+                      type: STRING
+                      description: string
+                      readOnly: true
+                      required: true
+                      includeInSubscriptionWizard: true
+                      value: new value2
+                    version: 5
+        '400':
+          description: 'Bad Request: Invalid update parameters or operation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the patch operation is not allowed for the subscription.
+                  value: Bad Request
+        '401':
+          description: 'Unauthorized for operation: updateSubscription'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The subscription to update does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the subscription to be updated is not found.
+                  value: Not Found
+      security:
+      - oauth-cc:
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

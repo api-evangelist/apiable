@@ -1,0 +1,45 @@
+{
+  "provider": "apiable",
+  "sources": [
+    "_original/apiable-platform-api-openapi.json"
+  ],
+  "outputs": [
+    "apiable-companies-api-openapi.yml",
+    "apiable-custom-properties-api-openapi.yml",
+    "apiable-docs-api-openapi.yml",
+    "apiable-files-api-openapi.yml",
+    "apiable-invitations-api-openapi.yml",
+    "apiable-plans-api-openapi.yml",
+    "apiable-products-api-openapi.yml",
+    "apiable-serverinfo-api-openapi.yml",
+    "apiable-subscriptions-api-openapi.yml",
+    "apiable-teams-api-openapi.yml",
+    "apiable-users-api-openapi.yml",
+    "apiable-webhooks-api-openapi.yml"
+  ],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apiable-platform-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: apiable-server-info-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 13 total)"
+  ],
+  "skipped": [
+    "apiable-companies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-custom-properties-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-docs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-invitations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-plans-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-server-info-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-teams-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "apiable-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

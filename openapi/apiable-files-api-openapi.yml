@@ -1,0 +1,103 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Files API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Files
+  description: Files are a way to store files in the system. All uploaded files are stored in an S3 bucket.
+paths:
+  /api/files/upload:
+    post:
+      tags:
+      - Files
+      summary: Upload a file
+      description: Expecting the request to be a multipart/form-data
+      operationId: uploadFile
+      parameters:
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: uploadFile.'
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+            examples:
+              FileUploadExample:
+                description: Example of a file upload using multipart/form-data.
+                value:
+                  file: (binary)
+      responses:
+        '202':
+          description: 'Accepted: The file has been successfully uploaded.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                FileUploadResponse:
+                  description: Response containing the URL of the uploaded file.
+                  value:
+                    body:
+                      url: https://apiable.s3.eu-central-1.amazonaws.com/your-file-key
+        '400':
+          description: 'Bad Request: The file size exceeds the limit or is invalid.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                FileSizeError:
+                  description: Error message when the file size exceeds the limit.
+                  value: 'File size exceeds the limit: 1MB'
+        '401':
+          description: 'Unauthorized for operation: uploadFile'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/cicd
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''

@@ -1,0 +1,464 @@
+openapi: 3.2.0
+info:
+  title: Apiable Platform Companies API
+  description: '## Introduction
+
+
+    The Apiable Platform API is a RESTful API that allows you to manage your portal, teams, users, and subscriptions.'
+  contact:
+    name: Apiable Team
+    url: https://apiable.io
+    email: support@apiable.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
+servers:
+- url: https://developer.apiable.io
+tags:
+- name: Companies
+  description: Companies, similar to teams are a way to group users together. Companies are a way to manage multiple teams and users together. An example being a company that has teams for different departments, such as backend and frontend development teams.Multiple teams can be part of the same company, and unlike teams, companies do not have roles and permissions, nor are subscriptions shared between different teams under the same company.
+paths:
+  /api/companies/{id}:
+    get:
+      tags:
+      - Companies
+      summary: Get company by ID
+      description: Fetches a specific company by its unique identifier.
+      operationId: findCompanyById
+      parameters:
+      - name: id
+        in: path
+        description: Company ID to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      responses:
+        '200':
+          description: 'OK: Successfully retrieved the company details.'
+          content:
+            application/json:
+              schema:
+                description: Company
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  domain:
+                    type: string
+                    description: 'The domain name of the company. e.g: "example.com"'
+                  name:
+                    type: string
+                    description: The name of the company, defaults to the domain name of the company.
+              examples:
+                Example response:
+                  description: Example company.
+                  value:
+                    id: 6697dd1e54d9ff2d372e135f
+                    created: '2024-07-17T17:02:54.005'
+                    updated: '2024-07-17T17:02:54.005'
+                    domain: yahoo.com
+                    name: Saruman Rings S.A.
+                    version: 0
+        '401':
+          description: 'Unauthorized for operation: findCompanyById'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The requested company does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the retrieved company is not found.
+                  value: Company not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+    patch:
+      tags:
+      - Companies
+      summary: Update a company
+      description: Updates a company with the provided fields using JSON patch operations.
+      operationId: updateCompany
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the company to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: 6268ec80a098ed05f047f278
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      requestBody:
+        description: 'Request body for operation: updateCompany.'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: Patch object for subscription
+                properties:
+                  op:
+                    type: string
+                    description: Supported patch operations
+                    enum:
+                    - replace
+                  path:
+                    type: string
+                    description: Supported patch paths for Subscription
+                    enum:
+                    - /name
+                    - /expires
+                    - /stripeSubscriptionId
+                    - /priceIds
+                    - /usageMeter
+                    - /owner
+                    - /email
+                  value:
+                    type: string
+            examples:
+              Example patch operations:
+                description: Patch operation to update the company name.
+                value:
+                - op: replace
+                  path: /name
+                  value: Mordor Rings Inc.
+        required: true
+      responses:
+        '200':
+          description: 'OK: Company updated successfully.'
+          content:
+            application/json:
+              schema:
+                description: Company
+                properties:
+                  version:
+                    type: integer
+                    format: int32
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  id:
+                    type: string
+                  domain:
+                    type: string
+                    description: 'The domain name of the company. e.g: "example.com"'
+                  name:
+                    type: string
+                    description: The name of the company, defaults to the domain name of the company.
+              examples:
+                Example response:
+                  description: Updated company.
+                  value:
+                    id: 6697dd1e54d9ff2d372e135f
+                    created: '2024-07-17T17:02:54.005'
+                    updated: '2024-07-17T17:02:54.005'
+                    domain: yahoo.com
+                    name: Saruman Rings S.A.
+                    version: 0
+        '400':
+          description: 'Bad Request: Invalid update parameters or operation.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                BadRequest:
+                  description: Error message when the patch operation is not allowed for the company.
+                  value: Invalid patch operation
+        '401':
+          description: 'Unauthorized for operation: updateCompany'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+        '404':
+          description: 'Not Found: The company to be updated does not exist.'
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                NotFound:
+                  description: Error message when the company to be updated is not found.
+                  value: Company not found
+      security:
+      - oauth-cc:
+        - apiable/platform
+  /api/companies:
+    get:
+      tags:
+      - Companies
+      summary: Get list of companies
+      description: Retrieves a paginated, sortable, and filterable list of all companies from the platform. Returns basic company information such as ID, name, and creation date. This operation supports pagination, sorting by various properties, and filtering using search parameters.
+      operationId: findAllCompanies
+      parameters:
+      - name: page
+        in: query
+        description: Zero-based page index for the findAllCompanies operation
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 0
+      - name: size
+        in: query
+        description: Number of companies per page in the findAllCompanies results
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+        example: 10
+      - name: sort
+        in: query
+        description: 'Sorting criteria for companies, in the format: property,asc|desc'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - created,desc
+      - name: search
+        in: query
+        description: 'Search filter for companies, in the format: property.op=value'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+        example:
+        - name.contains=example
+      - name: X-API-Version
+        in: header
+        description: API version to use.
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+          enum:
+          - '2024-09-25'
+      - name: resolve
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the list of companies that match the search and pagination criteria.
+          content:
+            application/json:
+              schema:
+                description: Response object for paginated company results
+                properties:
+                  content:
+                    type: array
+                    items:
+                      description: Company
+                      properties:
+                        version:
+                          type: integer
+                          format: int32
+                        created:
+                          type: string
+                          format: date-time
+                        updated:
+                          type: string
+                          format: date-time
+                        id:
+                          type: string
+                        domain:
+                          type: string
+                          description: 'The domain name of the company. e.g: "example.com"'
+                        name:
+                          type: string
+                          description: The name of the company, defaults to the domain name of the company.
+                  pageable:
+                    description: The PageableObject schema is used to represent pagination information for API responses. It includes details such as the current page number, size of the page, total number of pages, and total number of items available.
+                    properties:
+                      offset:
+                        type: integer
+                        format: int64
+                      pageNumber:
+                        type: integer
+                        format: int32
+                      pageSize:
+                        type: integer
+                        format: int32
+                      paged:
+                        type: boolean
+                      unpaged:
+                        type: boolean
+                      sort:
+                        description: The SortObject schema is used to represent sorting information for API responses.
+                        properties:
+                          empty:
+                            type: boolean
+                          sorted:
+                            type: boolean
+                          unsorted:
+                            type: boolean
+                  last:
+                    type: boolean
+                  totalElements:
+                    type: integer
+                    format: int64
+                  totalPages:
+                    type: integer
+                    format: int32
+                  size:
+                    type: integer
+                    format: int32
+                  number:
+                    type: integer
+                    format: int32
+                  sort:
+                    description: The SortObject schema is used to represent sorting information for API responses.
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  first:
+                    type: boolean
+                  numberOfElements:
+                    type: integer
+                    format: int32
+                  empty:
+                    type: boolean
+              examples:
+                Example response:
+                  description: Example list of companies matching the request.
+                  value:
+                    content:
+                    - id: 6697dd1e54d9ff2d372e135f
+                      created: '2024-07-17T17:02:54.005'
+                      updated: '2024-07-17T17:02:54.005'
+                      domain: yahoo.com
+                      name: Saruman Rings S.A.
+                      version: 0
+                    - id: 6697e00e54d9ff2d372e13d9
+                      created: '2024-07-17T17:15:26.776'
+                      updated: '2024-07-17T17:15:26.776'
+                      domain: apiable.io
+                      name: Gondor Rings Inc.
+                      version: 0
+                    pageable:
+                      pageNumber: 0
+                      pageSize: 10
+                      sort:
+                        empty: false
+                        unsorted: false
+                        sorted: true
+                      offset: 0
+                      paged: true
+                      unpaged: false
+                    last: true
+                    totalElements: 2
+                    totalPages: 1
+                    size: 10
+                    number: 0
+                    sort:
+                      empty: false
+                      unsorted: false
+                      sorted: true
+                    first: true
+                    numberOfElements: 2
+                    empty: false
+        '401':
+          description: 'Unauthorized for operation: findAllCompanies'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                  status:
+                    type: string
+                    example: '401'
+      security:
+      - oauth-cc:
+        - apiable/platform
+components:
+  securitySchemes:
+    oauth-cc:
+      type: oauth2
+      description: 'OAuth 2.0: Client Credentials'
+      flows:
+        clientCredentials:
+          tokenUrl: https://developer.apiable.io/api/oauth2/token
+          scopes: {}
+      x-receive-token-in: request-body
+      x-client-id: ''
+      x-client-secret: ''
