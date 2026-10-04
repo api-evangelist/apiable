@@ -478,6 +478,9 @@ apis:
   - type: DataModel
     url: data-model/apiable-data-model.yml
 common:
+- type: CapabilityMap
+  url: capabilities/apiable-capability-edges.yml
+  name: Apiable Business Capability Map
 - type: OpenAPI
   name: Apiable Platform API v2
   url: openapi/_original/apiable-platform-api-openapi.json

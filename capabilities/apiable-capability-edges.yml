@@ -1,0 +1,46 @@
+slug: apiable
+provider: Apiable
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Subscriptions
+  spec_file: apiable-subscriptions-api-openapi.yml
+  capability_id: BC-4240
+  capability_id_l1: BC-4240
+  capability_name: Subscription Lifecycle Management
+  confidence: 0.85
+  evidence: POST /api/subscriptions createSubscription Create a new subscription; POST /api/subscriptions/{id}/approve
+    approveSubscription; DELETE /api/subscriptions/{id} cancelAndRevokeSubscription Cancel and revoke
+    a subscription
+  reason: Operations create, approve, reject, update and cancel subscriptions to API plans — the commercial
+    subscription lifecycle. L2 left blank because the surface spans provisioning, modification, cancellation
+    and usage metering rather than one sub-capability.
+- tag: Docs
+  spec_file: apiable-docs-api-openapi.yml
+  capability_id: BC-4270.30
+  capability_id_l1: BC-4270
+  capability_name: Developer Portal Management
+  confidence: 0.8
+  evidence: PATCH /api/docs/full-api-doc patchFullApiDocConfiguration Update the Full API reference
+  reason: Operations manage documentation pages and the full API reference within a white-label developer
+    portal, which is squarely Developer Portal Management.
+- tag: Webhooks
+  spec_file: apiable-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.8
+  evidence: POST /api/webhooks registerWebhook Register a webhook; GET /api/webhooks/{id}/history Retrieve
+    the history of webhook results for the past 24 hours
+  reason: Registration, testing and delivery-history retrieval of outbound webhooks is exactly the webhook
+    and event subscription lifecycle exposed to platform integrators.
