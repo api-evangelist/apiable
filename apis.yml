@@ -478,6 +478,8 @@ apis:
   - type: DataModel
     url: data-model/apiable-data-model.yml
 common:
+- type: FinOps
+  url: finops/apiable-finops.yml
 - type: CapabilityMap
   url: capabilities/apiable-capability-edges.yml
   name: Apiable Business Capability Map
