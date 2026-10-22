@@ -15,3 +15,34 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: apiable-npm-registry
+  label: npm registry
+  partner: npm
+  partner_name: npm registry
+  category: official SDK (JavaScript/TypeScript)
+  type: register
+  channel: package-registry
+  evidence: https://www.npmjs.com/package/react-curity
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: react-curity
+      version: 2.2.12
+      released: '2022-12-13'
+      released_field: modified
+      lapsed: true
+      page: https://www.npmjs.com/package/react-curity
+      repo_leg: github-org:apiable
+      publisher_leg: email:apiable.io
+      matched_by: domain
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
